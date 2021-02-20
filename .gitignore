@@ -1,0 +1,8 @@
+.DS_Store
+*.pyc
+*.svg
+*.swp
+*.bak
+*.tmp
+*.yaml
+env/
