@@ -7,6 +7,7 @@ from pathlib import Path
 import svgwrite
 import click
 
+from draw.grid import GridWithBars, Row
 from draw.gantt import Gantt
 
 from models import Project
@@ -36,7 +37,10 @@ def gantt(filename):
 
     # draw the gantt chart
     dwg = svgwrite.Drawing(size=("1800", "600"))
-    g = Gantt(100, 100, project=p)
+    #g = Gantt(100, 100, project=p)
+    g = Gantt(100, 100, p)
+
+    # draw gantt
     dwg.add(g.draw(dwg))
 
     # finally, save

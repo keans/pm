@@ -1,115 +1,98 @@
 import math
-import datetime
 import collections
 
-from dateutil.relativedelta import relativedelta
-from dateutil.rrule import rrule, DAILY, WEEKLY, MONTHLY, YEARLY
+from dateutil.rrule import rrule, DAILY
 
 
 class Timetable:
     def __init__(
         self, start_date, end_date,
-        show_years=True, show_quarters=True, show_months=True,
-        show_weeks=True, show_days=True
+        show_years="%Y", show_quarters="Q", show_months="%m",
+        show_weeks="CW%V", show_days="%d"
     ):
         self.start_date = start_date
         self.end_date = end_date
 
-        self.shows = []
-        if show_years is True:
-            self.shows.append("year")
-        if show_quarters is True:
-            self.shows.append("quarter")
-        if show_months is True:
-            self.shows.append("month")
-        if show_weeks is True:
-            self.shows.append("week")
-        if show_days is True:
-            self.shows.append("day")
+        self.shows = collections.OrderedDict()
+        if show_years is not None:
+            self.shows["year"] = lambda dt: dt.strftime(show_years)
+        if show_quarters is not None:
+            self.shows["quarter"] = lambda dt: f"Q{math.ceil(dt.month/3.)}"
+        if show_months is not None:
+            self.shows["month"] = lambda dt: dt.strftime(show_months)
+        if show_weeks is not None:
+            self.shows["week"] = lambda dt: dt.strftime(show_weeks)
+        if show_days is not None:
+            self.shows["day"] = lambda dt: dt.strftime(show_days)
 
-    def index(self, item):
-        return self.show.index(item)
-
-    def days(self, fmt="%d"):
+    def days(self, fmt="%d", unique=False):
         """
         get a list of all days between the start date and the end date
         """
-        return [
-            dt #.strftime(fmt)
+        li = [
+            {
+                "dt": dt,
+                "fmt": dt.strftime(fmt)
+            }
             for dt in rrule(
                 DAILY, dtstart=self.start_date, until=self.end_date
             )
         ]
 
-    def weeks(self, fmt="%V"):
+        if unique is True:
+            # get unique items (concerning the previous entry)
+            res = [li[0]]
+            [res.append(x) for x in li[1:] if res[-1]["fmt"] != x["fmt"]]
+
+            return res
+
+        return li
+
+    def weeks(self, fmt="CW%V", unique=False):
         """
         get a list of all weeks between the start date and the end date
         """
-        # get first day of week of start date
-        start_date = (
-            self.start_date - datetime.timedelta(days=self.start_date.weekday())
-        )
-        # get last day of week of end date
-        end_date = self.end_date + datetime.timedelta(days=6)
+        return self.days(fmt, unique)
 
-        return [
-            dt.strftime(fmt)
-            for dt in rrule(
-                WEEKLY, dtstart=self.start_date, until=self.end_date
-            )
-        ]
-
-    def months(self, fmt="%m"):
+    def months(self, fmt="%b", unique=False):
         """
         get a list of all months between the start date and the end date
         """
-        # get first day of month for start date
-        start_date = datetime.date(
-            self.start_date.year, self.start_date.month, 1
-        )
-        # get first day of month for end date
-        end_date = datetime.date(self.end_date.year, self.end_date.month, 1)
+        return self.days(fmt, unique)
 
-        return [
-            dt.strftime(fmt)
-            for dt in rrule(MONTHLY, dtstart=start_date, until=end_date)
-        ]
-
-    def quarters(self):
+    def quarters(self, unique=False):
         """
         get a list of all months between the start date and the end date
         """
-        # get first day of month for start date
-        start_date = datetime.date(
-            self.start_date.year, self.start_date.month, 1
-        )
-        # get first day of month for end date
-        end_date = datetime.date(self.end_date.year, self.end_date.month, 1)
-
-        return [
-            f"Q{math.ceil(dt.month/3.)}"
-            for dt in rrule(
-                MONTHLY, dtstart=start_date, until=end_date,
-                bymonth=(3, 6, 9, 12), bymonthday=1
-            )
+        li = [
+            {
+                "dt": dt["dt"],
+                "fmt": f"Q{math.ceil(dt['dt'].month/3.)}"
+            }
+            for dt in self.days()
         ]
+        if unique is True:
+            # get unique items (concerning the previous entry)
+            res = [li[0]]
+            [res.append(x) for x in li[1:] if res[-1]["fmt"] != x["fmt"]]
 
-    def years(self, fmt="%Y"):
-        """
-        get a list of all year between the start date and the end date
-        """
-        # get first day of January for start date
-        start_date = datetime.date(
-            self.start_date.year, 1, 1
-        )
-        # get first day of January for end date
-        end_date = datetime.date(self.end_date.year, 1, 1)
+            return res
 
+        return li
+
+    def years(self, fmt="%Y", unique=False):
+        """
+        get a list of all months between the start date and the end date
+        """
+        return self.days(fmt, unique)
+
+    def is_weekend(self):
+        """
+        get a list of weekend flags of all days
+        """
         return [
-            dt.strftime(fmt)
-            for dt in rrule(
-                YEARLY, dtstart=start_date, until=end_date
-            )
+            dt.weekday() in (0, 6)
+            for dt, _ in self.days(fmt=None)
         ]
 
     def hierarchy(self):
@@ -119,13 +102,13 @@ class Timetable:
         res = []
         if "year" in self.shows:
             res.append(self.years())
-        
+
         if "quarter" in self.shows:
             res.append(self.quarters())
 
         if "month" in self.shows:
             res.append(self.months())
-        
+
         if "week" in self.shows:
             res.append(self.weeks())
 

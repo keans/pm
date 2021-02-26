@@ -1,8 +1,5 @@
-import math
-import collections
-
-from draw.base import Size, StrokeStyle
-from draw.grid import GridWithBars
+from draw.grid.cell import DEFAULT_CELL_WIDTH
+from draw.grid import GridWithBars, Row
 from utils.timetable import Timetable
 
 
@@ -12,46 +9,66 @@ class Gantt(GridWithBars):
     """
     def __init__(
         self, x, y, project,
-        cell_size=Size(25, 25),
-        stroke_style=StrokeStyle("gray", 1, "round", "round", None), 
-        fill="white"
+        default_cell_width=DEFAULT_CELL_WIDTH
     ):
+        GridWithBars.__init__(self, x, y)
+        self.default_cell_width = default_cell_width
+
         self.timetable = Timetable(
             project.start_date, project.end_date
         )
         self.project = project
 
-        GridWithBars.__init__(
-            self, x, y, 
-            project.entries + len(self.timetable.shows), 
-            len(self.timetable.hierarchy()[-1]), 
-            cell_size, stroke_style, fill
-        )
-
         self.prepare_top_header()
+
+        for entry in range(project.entries):
+            r = Row()
+            r.add_cols(len(self.timetable.days()))
+            self.add_row(r)
+
+            for wp in project.workpackages:
+                for t in wp.tasks:
+                    print(wp, t)
+            #g.add_bar((5, 3), 5)
+
+            # ACCESS DATES BY DICT ?! =>DRAW BARS
+
 
     def prepare_top_header(self):
         """
         prepare the top header
         """
-        last = collections.defaultdict(str)
-        for col, dt in enumerate(self.timetable.days()):
-            for row, item in enumerate(self.timetable.shows):
-                if item == "year":
-                    text = dt.strftime("%Y")
-                elif item == "quarter":
-                    text = f"Q{math.ceil(dt.month/3.)}"
-                elif item == "week":
-                    text = dt.strftime("CW%V")
-                elif item == "month":
-                    text = dt.strftime("%b")
-                elif item == "day":
-                    text = dt.strftime("%d")
+        def count(li):
+            res = []
 
-                    if dt.weekday() in (0, 6):
-                        # color weekends
-                        self.set_fill(row, col, "gray")
+            c = 0
+            last = None
+            for x in li:
+                if x["fmt"] != last:
+                    if c > 0:
+                        res.append(c)
+                    last = x["fmt"]
+                    c = 0
+                c += 1
+            res.append(c)
 
-                if text != last[item]:
-                    last[item] = text
-                    self.set_text(row, col, text)
+            return res
+
+        fmap = {
+            "year": self.timetable.years,
+            "quarter": self.timetable.quarters,
+            "month": self.timetable.months,
+            "week": self.timetable.weeks,
+            "day": self.timetable.days,
+        }
+        for s in self.timetable.shows:
+            r = Row()
+            for m, c in zip(fmap[s](unique=True), count(fmap[s]())):
+                cell = r.add_cell(
+                    cell_width=self.default_cell_width * c,
+                    text=m["fmt"]
+                )
+                if (s == "day") and (m["dt"].weekday() in (0, 6)):
+                    cell.set_fill("lightgray")
+
+            self.add_row(r)

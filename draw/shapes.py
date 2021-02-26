@@ -1,6 +1,6 @@
 from draw.base import DEFAULT_MARGIN, DEFAULT_PADDING, DEFAULT_STROKE_STYLE, \
-    DEFAULT_BORDER_STYLE, DEFAULT_TEXT_STYLE, TextStyle, Dimension, \
-    Position, StrokeStyle
+    DEFAULT_BORDER_STYLE, DEFAULT_TEXT_STYLE, Dimension, \
+    Position
 
 
 class Text:
@@ -12,20 +12,26 @@ class Text:
         text_style=DEFAULT_TEXT_STYLE,
         text_anchor="middle", text_dominant_baseline="middle",
     ):
-        self.position = Position(x, y)
         self.text = text
         self.text_anchor = text_anchor
         self.text_dominant_baseline = text_dominant_baseline
         self.text_style = text_style
+        self.set_pos(x, y)
+
+    def set_pos(self, x, y):
+        """
+        set new position
+        """
+        self.position = Position(x, y)
 
     def draw(self, dwg, grp=None):
         grp = grp or dwg
 
         grp.add(
             dwg.text(
-                text=self.text, 
-                insert=(self.position.x, self.position.y), 
-                fill=self.text_style.fill, 
+                text=self.text,
+                insert=(self.position.x, self.position.y),
+                fill=self.text_style.fill,
                 font_size=self.text_style.font_size,
                 font_family=self.text_style.font_family,
                 text_anchor=self.text_anchor,
@@ -44,7 +50,7 @@ class Line:
         self.start_position = Position(x1, y1)
         self.end_position = Position(x2, y2)
         self.stroke_style = stroke_style
-    
+
     def draw(self, dwg, grp=None):
         grp = grp or dwg
         extra = {
@@ -75,7 +81,7 @@ class Box:
     def __init__(
         self, x, y, width, height, fill="white",
         border_style=DEFAULT_BORDER_STYLE,
-        margin=DEFAULT_MARGIN, padding=DEFAULT_PADDING, 
+        margin=DEFAULT_MARGIN, padding=DEFAULT_PADDING,
     ):
         self.dimension = Dimension(x, y, width, height)
         self.fill = fill
@@ -94,7 +100,7 @@ class Box:
                     self.dimension.y1 + self.margin.top,
                 ),
                 (
-                    self.dimension.width - self.margin.right - self.margin.left, 
+                    self.dimension.width - self.margin.right - self.margin.left,
                     self.dimension.height - self.margin.bottom - self.margin.top,
                 ),
                 stroke="none", fill=self.fill
@@ -103,9 +109,9 @@ class Box:
 
         # top
         top_line = Line(
-            self.dimension.x1 + self.margin.left, 
-            self.dimension.y1 + self.margin.top, 
-            self.dimension.x2 - self.margin.right - self.margin.left, 
+            self.dimension.x1 + self.margin.left,
+            self.dimension.y1 + self.margin.top,
+            self.dimension.x2 - self.margin.right - self.margin.left,
             self.dimension.y1 + self.margin.top,
             self.border_style.top
         )
@@ -113,9 +119,9 @@ class Box:
 
         # right
         right_line = Line(
-            self.dimension.x2 - self.margin.right - self.margin.left, 
-            self.dimension.y1 + self.margin.top, 
-            self.dimension.x2 - self.margin.right - self.margin.left, 
+            self.dimension.x2 - self.margin.right - self.margin.left,
+            self.dimension.y1 + self.margin.top,
+            self.dimension.x2 - self.margin.right - self.margin.left,
             self.dimension.y2 - self.margin.bottom - self.margin.top,
             self.border_style.right
         )
@@ -123,9 +129,9 @@ class Box:
 
         # bottom
         bottom_line = Line(
-            self.dimension.x1 + self.margin.left, 
-            self.dimension.y2 - self.margin.bottom - self.margin.top, 
-            self.dimension.x2 - self.margin.right - self.margin.left, 
+            self.dimension.x1 + self.margin.left,
+            self.dimension.y2 - self.margin.bottom - self.margin.top,
+            self.dimension.x2 - self.margin.right - self.margin.left,
             self.dimension.y2 - self.margin.bottom - self.margin.top,
             self.border_style.bottom
         )
@@ -133,9 +139,9 @@ class Box:
 
         # left
         left_line = Line(
-            self.dimension.x1 + self.margin.left, 
-            self.dimension.y1 + self.margin.top, 
-            self.dimension.x1 + self.margin.left, 
+            self.dimension.x1 + self.margin.left,
+            self.dimension.y1 + self.margin.top,
+            self.dimension.x1 + self.margin.left,
             self.dimension.y2 - self.margin.bottom - self.margin.top,
             self.border_style.left
         )
@@ -153,9 +159,9 @@ class Bar:
     additionally, margin and padding is considered
     """
     def __init__(
-        self, x, y, width, height, rx=3, ry=3, 
+        self, x, y, width, height, rx=3, ry=3,
         fill="white", stroke="black",
-        margin=DEFAULT_MARGIN, padding=DEFAULT_PADDING, 
+        margin=DEFAULT_MARGIN, padding=DEFAULT_PADDING,
     ):
         self.dimension = Dimension(x, y, width, height)
         self.rx = rx
@@ -176,7 +182,7 @@ class Bar:
                     self.dimension.y1 + self.margin.top,
                 ),
                 (
-                    self.dimension.width - self.margin.right - self.margin.left, 
+                    self.dimension.width - self.margin.right - self.margin.left,
                     self.dimension.height - self.margin.bottom - self.margin.top,
                 ),
                 stroke=self.stroke, fill=self.fill,
@@ -193,9 +199,9 @@ class Bar:
 class Marker:
     # see https://matplotlib.org/3.1.0/api/markers_api.html
     SUPPORTED_MARKER = {
-        "d": "diamond", 
-        "o": "circle", 
-        "s": "square", 
+        "d": "diamond",
+        "o": "circle",
+        "s": "square",
     }
     def __init__(
         self, symbol, cx, cy, width, height=None,
@@ -206,47 +212,47 @@ class Marker:
         self.stroke_style = stroke_style
         self.fill = fill
 
-    def draw(self, dwg, grp=None):    
+    def draw(self, dwg, grp=None):
         grp = grp or dwg.g()
-        
+
         if self.symbol == "d":
             grp.add(
                 self.parent.polygon([
                     (
-                        self.dimension.x + self.dimension.width / 2, 
+                        self.dimension.x + self.dimension.width / 2,
                         self.dimension.y
-                    ), 
+                    ),
                     (
-                        self.dimension.x, 
+                        self.dimension.x,
                         self.dimension.y - self.h / 2
-                    ), 
+                    ),
                     (
-                        self.dimenison.x + self.w / 2, 
+                        self.dimenison.x + self.w / 2,
                         self.cy
-                    ), 
+                    ),
                     (
-                        self.dimension.x, 
+                        self.dimension.x,
                         self.cy + self.h / 2
                     )
                 ], stroke=self.stroke, fill=self.fill)
             )
-        
+
         # elif self.symbol == "o":
         #     grp.add(
         #         self.parent.rect(
-        #             (self.cx - self.w / 2, self.cy - self.w / 2), 
-        #             (self.w, self.w), 
+        #             (self.cx - self.w / 2, self.cy - self.w / 2),
+        #             (self.w, self.w),
         #             stroke=self.stroke, fill=self.fill
         #         )
         #     )
-        
+
         # elif self.symbol == "circle":
         #     grp.add(
         #         self.parent.circle(
-        #             (self.cx, self.cy), 
-        #             r=self.w/2, 
+        #             (self.cx, self.cy),
+        #             r=self.w/2,
         #             stroke=self.stroke, fill=self.fill
         #         )
-        #     )       
+        #     )
 
         return grp

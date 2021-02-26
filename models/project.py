@@ -20,7 +20,7 @@ class Project:
         self.end_date = end_date
 
         self.workpackages = []
-    
+
     @staticmethod
     def create_from(filename):
         """
@@ -28,7 +28,7 @@ class Project:
         """
         project = Project(None, None, None, None)
         project.load(filename)
-        
+
         return project
 
     @property
@@ -58,15 +58,15 @@ class Project:
         """
         with open(filename, "r") as f:
             project = yaml.safe_load(f)
-        
+
             v = cerberus.Validator(schema)
             if v.validate(project) is False:
                 raise Exception(v.errors)
-        
+
         # set internal variables based on doc
         self.name = project["name"]
         self.responsible = project["responsible"]
-        self.start_date = dateutil_parse(project["start_date"])
+        self.start_date = dateutil_parse(project["start_date"], dayfirst=True)
         self.end_date = dateutil_parse(project["end_date"])
 
         self.workpackages = []
@@ -80,12 +80,12 @@ class Project:
             # add tasks to workpackage
             for t in wp.get("tasks", []):
                 task = Task(
-                    t["name"], 
-                    t.get("responsible", "tbd"), 
-                    dateutil_parse(t["start_date"]), 
+                    t["name"],
+                    t.get("responsible", "tbd"),
+                    dateutil_parse(t["start_date"], dayfirst=True),
                     datetime.timedelta(
                         seconds=pytimeparse_parse(t["duration"])
-                    ), 
+                    ),
                     t.get("is_done", False)
                 )
                 workpackage.add_task(task)
@@ -93,12 +93,12 @@ class Project:
             # add milestones to workpackage
             for ms in wp.get("milestones", []):
                 milestone = Milestone(
-                    ms["name"], 
-                    ms.get("responsible", "tbd"), 
-                    dateutil_parse(ms["date"]), 
+                    ms["name"],
+                    ms.get("responsible", "tbd"),
+                    dateutil_parse(ms["date"], dayfirst=True),
                 )
                 workpackage.add_milestone(milestone)
-    
+
     def __repr__(self):
         return (
             f"<Project(name='{self.name}', responsible='{self.responsible}', "
