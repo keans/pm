@@ -50,10 +50,17 @@ schema = {
         "schema": {
             "type": "dict",
             "schema": {
-                "name": {"type": "string"},
-                "responsible": {"type": "string"},
+                "name": {
+                    "type": "string",
+                    "required": True
+                },
+                "responsible": {
+                    "type": "string",
+                    "required": True
+                },
                 "tasks": {
                     "type": "list",
+                    "required": True,
                     "schema": {
                         "type": "dict",
                         "schema": {

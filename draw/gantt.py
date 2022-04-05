@@ -23,7 +23,7 @@ class Gantt(GridWithBars):
 
         for entry in range(project.entries):
             r = Row()
-            r.add_cols(len(self.timetable.days()))
+            r.add_cols(len(self.timetable.days))
             self.add_row(r)
 
             for wp in project.workpackages:
@@ -38,22 +38,6 @@ class Gantt(GridWithBars):
         """
         prepare the top header
         """
-        def count(li):
-            res = []
-
-            c = 0
-            last = None
-            for x in li:
-                if x["fmt"] != last:
-                    if c > 0:
-                        res.append(c)
-                    last = x["fmt"]
-                    c = 0
-                c += 1
-            res.append(c)
-
-            return res
-
         fmap = {
             "year": self.timetable.years,
             "quarter": self.timetable.quarters,
@@ -61,14 +45,13 @@ class Gantt(GridWithBars):
             "week": self.timetable.weeks,
             "day": self.timetable.days,
         }
-        for s in self.timetable.shows:
+
+        for s in self.timetable.hierarchy():
             r = Row()
-            for m, c in zip(fmap[s](unique=True), count(fmap[s]())):
+            for items in s:
                 cell = r.add_cell(
-                    cell_width=self.default_cell_width * c,
-                    text=m["fmt"]
+                    cell_width=self.default_cell_width * len(items),
+                    text=items[0].default
                 )
-                if (s == "day") and (m["dt"].weekday() in (0, 6)):
-                    cell.set_fill("lightgray")
 
             self.add_row(r)

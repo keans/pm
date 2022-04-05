@@ -70,10 +70,11 @@ class Project:
         self.end_date = dateutil_parse(project["end_date"])
 
         self.workpackages = []
-        for wp in project["workpackages"]:
+        for wp in project.get("workpackages", []):
             # add workpackage
             workpackage = Workpackage(
-                wp["name"], wp["responsible"]
+                name=wp["name"],
+                responsible=wp.get("responsible", "unknown")
             )
             self.workpackages.append(workpackage)
 
