@@ -22,14 +22,18 @@ class Gantt(GridWithBars):
         self.prepare_top_header()
 
         for entry in range(project.entries):
-            r = Row()
-            r.add_cols(len(self.timetable.days))
-            self.add_row(r)
 
+            i = 0
             for wp in project.workpackages:
                 for t in wp.tasks:
-                    print(wp, t)
-            #g.add_bar((5, 3), 5)
+                    r = Row()
+                    r.add_cols(len(self.timetable.days))
+                    self.add_row(r)
+
+                    # TODO: get start date as position from Timetable
+                    #       add colors per package? to inheritance
+                    self.add_bar((len(self.timetable.hierarchy()) + i, 0), t.duration.days-1)
+                    i += 1
 
             # ACCESS DATES BY DICT ?! =>DRAW BARS
 

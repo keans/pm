@@ -30,6 +30,15 @@ class Row:
 
         return self.cells[0].height
 
+    def __len__(self) -> int:
+        """
+        returns the number of columns
+
+        :return: number of columns
+        :rtype: int
+        """
+        return len(self.cells)
+
     def __getitem__(self, col):
         """
         return cell by given column
@@ -99,4 +108,4 @@ class Row:
         return grp
 
     def __repr__(self):
-        return f"GridRow(dimension={self.dimension})"
+        return f"GridRow(width={self.width}, heigh={self.height})"
