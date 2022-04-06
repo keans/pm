@@ -1,4 +1,4 @@
-from draw.base import Position, TextStyle, Padding
+from draw.base import Position, StrokeStyle, TextStyle, Padding
 from draw.grid.cell import DEFAULT_CELL_FILL, DEFAULT_CELL_WIDTH
 from draw.grid import GridWithBars, Row
 from models.types import DateType
@@ -95,7 +95,10 @@ class Gantt(GridWithBars):
         """
         for s in self.timetable.hierarchy():
             r = Row()
-            r.add_cell(cell_width=self.description_width)
+            r.add_cell(
+                cell_width=self.description_width,
+                stroke_style=StrokeStyle("white", 1, "round", "round", "")
+            )
 
             for items in s:
                 fill = DEFAULT_CELL_FILL
