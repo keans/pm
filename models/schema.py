@@ -73,6 +73,9 @@ schema = {
                                 "type": "string",
                                 "check_with": is_duration,
                             },
+                            "depends_on": {
+                                "type": "string",
+                            }
                         }
                     }
                 },

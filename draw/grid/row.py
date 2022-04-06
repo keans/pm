@@ -1,4 +1,4 @@
-from draw.base import Position, BorderStyle
+from draw.base import Position, BorderStyle, StrokeStyle
 
 from .cell import DEFAULT_CELL_HEIGHT, DEFAULT_CELL_WIDTH, \
     DEFAULT_CELL_STROKE_STYLE, DEFAULT_CELL_FILL, Cell
@@ -43,7 +43,6 @@ class Row:
         """
         return cell by given column
         """
-        print(col)
         return self.cells[col]
 
     def __next__(self):
@@ -89,8 +88,12 @@ class Row:
         return cell
 
     def add_cols(
-        self, col_count, cell_width=DEFAULT_CELL_WIDTH, text="",
-        fill=DEFAULT_CELL_FILL, stroke_style=DEFAULT_CELL_STROKE_STYLE
+        self,
+        col_count: int,
+        cell_width: int = DEFAULT_CELL_WIDTH,
+        text: str="",
+        fill: str = DEFAULT_CELL_FILL,
+        stroke_style: StrokeStyle = DEFAULT_CELL_STROKE_STYLE
     ):
         """
         add multiple columns of same style to the row

@@ -7,4 +7,5 @@
 *.bak
 *.tmp
 *.yaml
+.direnv/
 env/

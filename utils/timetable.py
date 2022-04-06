@@ -1,87 +1,17 @@
 from datetime import datetime
 import math
-import collections
 import itertools
-from enum import Enum
 
 from dateutil.rrule import rrule, DAILY
 
-
-class DateType(Enum):
-    DAYS = "days"
-    WEEKS = "weeks"
-    MONTHS = "months"
-    QUARTERS = "quarters"
-    YEARS = "years"
-
-
-class TimetableItem:
-    def __init__(
-        self,
-        dt_type: DateType,
-        dt: datetime,
-        year_format: str,
-        quarter_format: str,
-        month_format: str,
-        week_format: str,
-        day_format: str
-    ):
-        self.dt_type = dt_type
-        self.dt = dt
-
-        self.year_format = year_format
-        self.quarter_format = quarter_format
-        self.month_format = month_format
-        self.week_format = week_format
-        self.day_format = day_format
-
-    @property
-    def default(self) -> str:
-        if self.dt_type == DateType.YEARS:
-            return self.year
-        elif self.dt_type == DateType.QUARTERS:
-            return self.quarter
-        elif self.dt_type == DateType.MONTHS:
-            return self.month
-        elif self.dt_type == DateType.WEEKS:
-            return self.week
-        elif self.dt_type == DateType.DAYS:
-            return self.day
-
-        raise NotImplemented(f"Unknown date type '{self.dt_type}'!")
-
-    @property
-    def year(self) -> str:
-        return self.dt.strftime(self.year_format)
-
-    @property
-    def quarter(self) -> str:
-        return f"{self.quarter_format}{math.ceil(self.dt.month/3.)}"
-
-    @property
-    def month(self) -> str:
-        return self.dt.strftime(self.month_format)
-
-    @property
-    def week(self) -> str:
-        return self.dt.strftime(self.week_format)
-
-    @property
-    def day(self) -> str:
-        return self.dt.strftime(self.day_format)
-
-    def is_weekend(self) -> bool:
-        return self.dt.weekday() in (0, 6)
-
-    def __repr__(self) -> str:
-        return (
-            f"<TimetableItem(dt={self.dt}, year='{self.year}', "
-            f"quarter='{self.quarter}', month='{self.month}', "
-            f"week='{self.week}', day='{self.day}')>"
-        )
+from models.timetableitem import TimetableItem
+from models.types import DateType
 
 
 class Timetable:
+    """
+    timetable
+    """
     def __init__(
         self,
         start_date: datetime,
@@ -130,23 +60,29 @@ class Timetable:
 
     @property
     def years(self) -> str:
-        return self._get(DateType.YEARS)
+        return self._get(DateType.YEAR)
 
     @property
     def quarters(self) -> str:
-        return self._get(DateType.QUARTERS)
+        return self._get(DateType.QUARTER)
 
     @property
     def months(self) -> str:
-        return self._get(DateType.MONTHS)
+        return self._get(DateType.MONTH)
 
     @property
     def weeks(self) -> str:
-        return self._get(DateType.WEEKS)
+        return self._get(DateType.WEEK)
 
     @property
     def days(self) -> str:
-        return self._get(DateType.DAYS)
+        return self._get(DateType.DAY)
+
+    def get_pos(self, dt: datetime) -> int:
+        return [
+            d.dt
+            for d in itertools.chain(*self.days)
+        ].index(dt)
 
     def hierarchy(self):
         """
@@ -169,6 +105,9 @@ class Timetable:
             res.append(self.days)
 
         return res
+
+    def hierarchy_count(self):
+        return len(self.hierarchy())
 
     def __repr__(self):
         return str(self.hierarchy())

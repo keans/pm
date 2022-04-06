@@ -58,7 +58,7 @@ class BorderStyle:
     def __init__(self, top, right, bottom, left):
         assert(
             all([
-                isinstance(m, StrokeStyle) 
+                isinstance(m, StrokeStyle)
                 for m in [top, right, bottom, left]
             ])
         )
@@ -73,7 +73,8 @@ DEFAULT_MARGIN = Margin(0, 0, 0, 0)
 DEFAULT_PADDING = Padding(0, 0, 0, 0)
 DEFAULT_STROKE_STYLE = StrokeStyle("black", 1, "round", "round", "")
 DEFAULT_BORDER_STYLE = BorderStyle(
-    DEFAULT_STROKE_STYLE, DEFAULT_STROKE_STYLE, 
+    DEFAULT_STROKE_STYLE, DEFAULT_STROKE_STYLE,
     DEFAULT_STROKE_STYLE, DEFAULT_STROKE_STYLE
 )
 DEFAULT_TEXT_STYLE = TextStyle("black", 12, "Helvetica")
+DEFAULT_PATH_ARROW_STYLE = StrokeStyle("red", 2, "round", "round", "")

@@ -1,5 +1,6 @@
+from tracemalloc import start
 from draw.base import Position, Margin
-from draw.shapes import Bar
+from draw.shapes import Bar, PathArrow
 
 from .grid import Grid
 
@@ -11,6 +12,7 @@ class GridWithBars(Grid):
     def __init__(self, x, y):
         Grid.__init__(self, x, y)
         self.bars = []
+        self.dependencies = []
 
     def add_bar(self, position, length, fill="black"):
         """
@@ -28,6 +30,21 @@ class GridWithBars(Grid):
         )
         self.bars.append(bar)
 
+    def add_dependency(self, start_position, end_position):
+        start_position = Position(*start_position)
+        end_position = Position(*end_position)
+
+        start_cell = self.get_cell(*start_position)
+        end_cell = self.get_cell(*end_position)
+
+        p = PathArrow(
+            start_cell.dimension.x,
+            start_cell.dimension.cy,
+            end_cell.dimension.x,
+            end_cell.dimension.cy
+        )
+        self.dependencies.append(p)
+
     def draw(self, dwg, grp=None):
         grp = Grid.draw(self, dwg, grp)
 
@@ -36,5 +53,11 @@ class GridWithBars(Grid):
         for bar in self.bars:
             bar.draw(dwg, bars_grp)
         grp.add(bars_grp)
+
+        # draw dependencies (arrows)
+        dependencies_grp = dwg.g()
+        for dep in self.dependencies:
+            dep.draw(dwg, dependencies_grp)
+        grp.add(dependencies_grp)
 
         return grp

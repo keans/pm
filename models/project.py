@@ -81,13 +81,14 @@ class Project:
             # add tasks to workpackage
             for t in wp.get("tasks", []):
                 task = Task(
-                    t["name"],
-                    t.get("responsible", "tbd"),
-                    dateutil_parse(t["start_date"], dayfirst=True),
-                    datetime.timedelta(
+                    name=t["name"],
+                    responsible=t.get("responsible", "tbd"),
+                    start_date=dateutil_parse(t["start_date"]),
+                    duration=datetime.timedelta(
                         seconds=pytimeparse_parse(t["duration"])
                     ),
-                    t.get("is_done", False)
+                    depends_on=t.get("depends_on", None),
+                    is_done=t.get("is_done", False)
                 )
                 workpackage.add_task(task)
 
@@ -96,7 +97,7 @@ class Project:
                 milestone = Milestone(
                     ms["name"],
                     ms.get("responsible", "tbd"),
-                    dateutil_parse(ms["date"], dayfirst=True),
+                    dateutil_parse(ms["date"]),
                 )
                 workpackage.add_milestone(milestone)
 

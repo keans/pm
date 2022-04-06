@@ -1,6 +1,8 @@
 from draw.base import DEFAULT_MARGIN, DEFAULT_PADDING, DEFAULT_STROKE_STYLE, \
-    DEFAULT_BORDER_STYLE, DEFAULT_TEXT_STYLE, Dimension, \
-    Position
+    DEFAULT_BORDER_STYLE, DEFAULT_TEXT_STYLE, DEFAULT_PATH_ARROW_STYLE, \
+    Dimension, Position
+
+from svgwrite.path import Path
 
 
 class Text:
@@ -52,6 +54,93 @@ class Line:
         self.stroke_style = stroke_style
 
     def draw(self, dwg, grp=None):
+        grp = grp or dwg
+        extra = {
+            "stroke": self.stroke_style.stroke,
+            "stroke_width": self.stroke_style.width,
+            "stroke_linecap": self.stroke_style.linecap,
+            "stroke_linejoin": self.stroke_style.linejoin
+        }
+        if self.stroke_style.dasharray not in (None, ""):
+            extra["stroke_dasharray"] = self.stroke_style.dasharray
+
+        grp.add(
+            dwg.line(
+                self.start_position,
+                self.end_position,
+                **extra
+            )
+        )
+
+        return grp
+
+
+class PathArrow:
+    """
+    simple line with stroke style
+    """
+    def __init__(self, x1, y1, x2, y2, stroke_style=DEFAULT_PATH_ARROW_STYLE):
+        self.start_position = Position(x1, y1)
+        self.end_position = Position(x2, y2)
+        self.stroke_style = stroke_style
+
+    def draw(self, dwg, grp=None):
+        grp = grp or dwg
+
+        extra = {
+            "stroke": self.stroke_style.stroke,
+            "stroke_width": self.stroke_style.width,
+            "stroke_linecap": self.stroke_style.linecap,
+            "stroke_linejoin": self.stroke_style.linejoin,
+            "fill": "none",
+            "marker-end": "url(#arrow)"
+        }
+
+        arrow_size = 4
+
+        # prepare arrow marker
+        arrow = dwg.marker(
+            id="arrow",
+            insert=(1, arrow_size / 2),
+            size=(arrow_size, arrow_size),
+            orient="auto", markerUnits="strokeWidth"
+        )
+        arrow.viewbox(width=arrow_size, height=arrow_size)
+        arrow.add(
+            dwg.polyline(
+                [
+                    (0,0), (arrow_size,arrow_size/2),
+                    (0,arrow_size), (1,arrow_size/2)
+                ],
+                fill=self.stroke_style.stroke
+            )
+        )
+        dwg.defs.add(arrow)
+
+        h = (self.end_position.y - self.start_position.y) * 0.5
+
+        path = Path(
+            d=("M", self.start_position.x - 2, self.start_position.y),
+            **extra
+        )
+        path.push("L", self.start_position.x + 5, self.start_position.y)
+
+        if self.start_position.x >= self.end_position.x:
+            # same x position => go down and back
+            path.push("L", self.start_position.x + 5, self.start_position.y + h)
+            path.push("L", self.end_position.x - 5, self.start_position.y + h)
+            path.push("L", self.end_position.x - 5, self.end_position.y)
+            path.push("L", self.end_position.x, self.end_position.y)
+
+        else:
+            # far away x position => simply go down
+            path.push("L", self.start_position.x + 5, self.end_position.y)
+            path.push("L", self.end_position.x, self.end_position.y)
+
+        grp.add(path)
+
+        return grp
+
         grp = grp or dwg
         extra = {
             "stroke": self.stroke_style.stroke,
