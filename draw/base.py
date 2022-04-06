@@ -9,7 +9,7 @@ StrokeStyle = collections.namedtuple(
 )
 
 TextStyle = collections.namedtuple(
-    "TextStyle", ["fill", "font_size", "font_family"]
+    "TextStyle", ["fill", "font_size", "font_family", "font_weight"]
 )
 
 class Dimension:
@@ -76,5 +76,5 @@ DEFAULT_BORDER_STYLE = BorderStyle(
     DEFAULT_STROKE_STYLE, DEFAULT_STROKE_STYLE,
     DEFAULT_STROKE_STYLE, DEFAULT_STROKE_STYLE
 )
-DEFAULT_TEXT_STYLE = TextStyle("black", 12, "Helvetica")
+DEFAULT_TEXT_STYLE = TextStyle("black", 12, "Helvetica", 300)
 DEFAULT_PATH_ARROW_STYLE = StrokeStyle("red", 2, "round", "round", "")

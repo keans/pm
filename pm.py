@@ -36,7 +36,7 @@ def gantt(filename):
     p = Project.create_from(filename)
 
     # draw the gantt chart
-    dwg = svgwrite.Drawing(size=("1800", "600"))
+    dwg = svgwrite.Drawing(size=("1900", "600"))
     #g = Gantt(100, 100, project=p)
     g = Gantt(100, 100, p)
 

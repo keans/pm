@@ -1,5 +1,5 @@
 from draw.base import DEFAULT_MARGIN, DEFAULT_PADDING, DEFAULT_TEXT_STYLE, \
-    DEFAULT_BORDER_STYLE, StrokeStyle
+    DEFAULT_BORDER_STYLE, BorderStyle, Margin, Padding, StrokeStyle, TextStyle
 from draw.shapes import Box, Text
 
 
@@ -16,21 +16,40 @@ class Cell(Box):
     and contain a text
     """
     def __init__(
-        self, x, y, width, height, text="",
-        fill=DEFAULT_CELL_FILL,
-        border_style=DEFAULT_BORDER_STYLE,
-        text_style=DEFAULT_TEXT_STYLE,
-        text_anchor="middle", text_alignment_baseline="middle",
-        margin=DEFAULT_MARGIN, padding=DEFAULT_PADDING,
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        text: str = "",
+        fill: str = DEFAULT_CELL_FILL,
+        border_style: BorderStyle = DEFAULT_BORDER_STYLE,
+        text_style: TextStyle = DEFAULT_TEXT_STYLE,
+        text_anchor: str = "middle",
+        text_alignment_baseline: str = "middle",
+        margin: Margin = DEFAULT_MARGIN,
+        padding: Padding = DEFAULT_PADDING
     ):
         Box.__init__(
-            self, x, y, width, height, fill, border_style, margin, padding
+            self,
+            x=x,
+            y=y,
+            width=width,
+            height=height,
+            fill=fill,
+            border_style=border_style,
+            margin=margin,
+            padding=padding
         )
 
         # prepare text
         self.text = Text(
-            self.dimension.cx, self.dimension.cy,
-            text, text_style, text_anchor, text_alignment_baseline
+            x=0,
+            y=0,
+            text=text,
+            text_style=text_style,
+            text_anchor=text_anchor,
+            text_dominant_baseline=text_alignment_baseline
         )
 
     @property
@@ -47,7 +66,29 @@ class Cell(Box):
         """
         self.dimension.x = x
         self.dimension.y = y
-        self.text.set_pos(self.dimension.cx, self.dimension.cy)
+
+        # align horizontal text
+        if self.text.text_anchor == "start":
+            text_x = self.dimension.x1 + self.padding.left
+
+        elif self.text.text_anchor == "end":
+            text_x = self.dimension.x2 - self.padding.right
+
+        elif self.text.text_anchor == "middle":
+            text_x = self.dimension.cx
+
+        # align vertical text
+        if self.text.text_dominant_baseline == "hanging":
+            text_y = self.dimension.y1 + self.padding.top
+
+        elif self.text.text_dominant_baseline == "auto":
+            text_y = self.dimension.y2 - + self.padding.bottom
+
+        elif self.text.text_dominant_baseline == "middle":
+            text_y = self.dimension.cy
+
+        # set text position
+        self.text.set_pos(text_x, text_y)
 
     def set_fill(self, fill):
         self.fill = fill

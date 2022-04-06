@@ -1,5 +1,5 @@
-from draw.base import Position, BorderStyle, StrokeStyle
-
+from draw.base import DEFAULT_TEXT_STYLE, DEFAULT_MARGIN, DEFAULT_PADDING, \
+    Position, BorderStyle, StrokeStyle
 from .cell import DEFAULT_CELL_HEIGHT, DEFAULT_CELL_WIDTH, \
     DEFAULT_CELL_STROKE_STYLE, DEFAULT_CELL_FILL, Cell
 
@@ -65,22 +65,36 @@ class Row:
         self._update_positions()
 
     def add_cell(
-        self, cell_width=DEFAULT_CELL_WIDTH, text="",
+        self,
+        cell_width=DEFAULT_CELL_WIDTH,
+        text="",
         fill=DEFAULT_CELL_FILL,
-        stroke_style=DEFAULT_CELL_STROKE_STYLE
+        stroke_style=DEFAULT_CELL_STROKE_STYLE,
+        text_style=DEFAULT_TEXT_STYLE,
+        text_anchor="middle",
+        text_alignment_baseline="middle",
+        margin=DEFAULT_MARGIN,
+        padding=DEFAULT_PADDING,
     ):
         """
         add a cell to a row
         """
         cell = Cell(
-            x=0, y=0,
-            width=cell_width, height=self.row_height,
+            x=0,
+            y=0,
+            width=cell_width,
+            height=self.row_height,
             text=text,
             fill=fill,
             border_style=BorderStyle(
                 stroke_style, stroke_style,
                 stroke_style, stroke_style
-            )
+            ),
+            text_style=text_style,
+            text_anchor=text_anchor,
+            text_alignment_baseline=text_alignment_baseline,
+            margin=margin,
+            padding=padding,
         )
         self.cells.append(cell)
         self._update_positions()

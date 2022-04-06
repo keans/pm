@@ -1,6 +1,6 @@
 from draw.base import DEFAULT_MARGIN, DEFAULT_PADDING, DEFAULT_STROKE_STYLE, \
     DEFAULT_BORDER_STYLE, DEFAULT_TEXT_STYLE, DEFAULT_PATH_ARROW_STYLE, \
-    Dimension, Position
+    BorderStyle, Margin, Padding, Dimension, Position
 
 from svgwrite.path import Path
 
@@ -36,6 +36,7 @@ class Text:
                 fill=self.text_style.fill,
                 font_size=self.text_style.font_size,
                 font_family=self.text_style.font_family,
+                font_weight=self.text_style.font_weight,
                 text_anchor=self.text_anchor,
                 dominant_baseline=self.text_dominant_baseline
             )
@@ -77,7 +78,7 @@ class Line:
 
 class PathArrow:
     """
-    simple line with stroke style
+    path with an arrow at the end
     """
     def __init__(self, x1, y1, x2, y2, stroke_style=DEFAULT_PATH_ARROW_STYLE):
         self.start_position = Position(x1, y1)
@@ -141,26 +142,6 @@ class PathArrow:
 
         return grp
 
-        grp = grp or dwg
-        extra = {
-            "stroke": self.stroke_style.stroke,
-            "stroke_width": self.stroke_style.width,
-            "stroke_linecap": self.stroke_style.linecap,
-            "stroke_linejoin": self.stroke_style.linejoin
-        }
-        if self.stroke_style.dasharray not in (None, ""):
-            extra["stroke_dasharray"] = self.stroke_style.dasharray
-
-        grp.add(
-            dwg.line(
-                self.start_position,
-                self.end_position,
-                **extra
-            )
-        )
-
-        return grp
-
 
 class Box:
     """
@@ -168,9 +149,15 @@ class Box:
     additionally, margin and padding is considered
     """
     def __init__(
-        self, x, y, width, height, fill="white",
-        border_style=DEFAULT_BORDER_STYLE,
-        margin=DEFAULT_MARGIN, padding=DEFAULT_PADDING,
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        fill: str = "white",
+        border_style: BorderStyle = DEFAULT_BORDER_STYLE,
+        margin: Margin = DEFAULT_MARGIN,
+        padding: Padding =DEFAULT_PADDING,
     ):
         self.dimension = Dimension(x, y, width, height)
         self.fill = fill
