@@ -1,6 +1,5 @@
-from tracemalloc import start
-from draw.base import Position, Margin
-from draw.shapes import Bar, PathArrow
+from draw.base import Position #, Margin
+from draw.shapes import Bar, PathWithArrow
 
 from .grid import Grid
 
@@ -14,34 +13,41 @@ class GridWithBars(Grid):
         self.bars = []
         self.dependencies = []
 
-    def add_bar(self, position, length, fill="black"):
+    def add_bar(
+        self,
+        position: Position,
+        length: int,
+        fill: str = "black"
+    ):
         """
         add a bar to the grid
         """
-        position = Position(*position)
-        start_cell = self.get_cell(*position)
-        end_cell = self.get_cell(position[0], position[1] + length)
+        start_cell = self.get_cell(*position.tuple)
+        end_cell = self.get_cell(position.x, position.y + length)
 
         bar = Bar(
-            start_cell.dimension.x, start_cell.dimension.y,
-            width=end_cell.dimension.x2 - start_cell.dimension.x1,
-            height=start_cell.dimension.height,
-            fill=fill, margin=Margin(2, 2, 2, 2)
+            x=start_cell.pos.x,
+            y=start_cell.pos.y,
+            width=end_cell.x2 - start_cell.x1,
+            height=start_cell.height,
+            fill=fill,
+            #margin=Margin(2, 2, 2, 2)
         )
         self.bars.append(bar)
 
-    def add_dependency(self, start_position, end_position):
-        start_position = Position(*start_position)
-        end_position = Position(*end_position)
+    def add_dependency(
+        self,
+        start_position: Position,
+        end_position: Position
+    ):
+        start_cell = self.get_cell(*start_position.tuple)
+        end_cell = self.get_cell(*end_position.tuple)
 
-        start_cell = self.get_cell(*start_position)
-        end_cell = self.get_cell(*end_position)
-
-        p = PathArrow(
-            start_cell.dimension.x,
-            start_cell.dimension.cy,
-            end_cell.dimension.x,
-            end_cell.dimension.cy
+        p = PathWithArrow(
+            start_cell.pos.x,
+            start_cell.cy,
+            end_cell.pos.x,
+            end_cell.cy
         )
         self.dependencies.append(p)
 

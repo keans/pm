@@ -1,5 +1,5 @@
-from draw.base import Position, StrokeStyle, TextStyle, Padding
-from draw.grid.cell import DEFAULT_CELL_FILL, DEFAULT_CELL_WIDTH
+from draw.base import Position, Padding
+from draw.shapes.cell import DEFAULT_CELL_FILL, DEFAULT_CELL_WIDTH
 from draw.grid import GridWithBars, Row
 from models.types import DateType
 from utils.timetable import Timetable
@@ -33,8 +33,8 @@ class Gantt(GridWithBars):
             r.add_cell(
                 cell_width=self.description_width, text=wp.name,
                 text_anchor="start",
-                text_style=TextStyle("black", 14, "Helvetica", 600),
-                padding=Padding(2,2,2,10)
+                #text_style=TextStyle("black", 14, "Helvetica", 600),
+                padding=Padding(top=2, right=2, bottom=2, left=10)
             )
             self.add_days(r)
             self.add_row(r)
@@ -45,9 +45,11 @@ class Gantt(GridWithBars):
 
                 # add task description
                 r.add_cell(
-                    cell_width=self.description_width, text=t.name, text_anchor="start",
+                    cell_width=self.description_width,
+                    text=t.name,
+                    text_anchor="start",
                     text_alignment_baseline="middle",
-                    padding=Padding(2,2,2,20)
+                    padding=Padding(top=2, right=2, bottom=2, left=20)
                 )
                 self.add_days(r)
                 self.add_row(r)
@@ -97,7 +99,7 @@ class Gantt(GridWithBars):
             r = Row()
             r.add_cell(
                 cell_width=self.description_width,
-                stroke_style=StrokeStyle("white", 1, "round", "round", "")
+               # stroke_style=StrokeStyle("white", 1, "round", "round", "")
             )
 
             for items in s:

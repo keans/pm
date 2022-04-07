@@ -1,7 +1,10 @@
-from draw.base import DEFAULT_TEXT_STYLE, DEFAULT_MARGIN, DEFAULT_PADDING, \
-    Position, BorderStyle, StrokeStyle
-from .cell import DEFAULT_CELL_HEIGHT, DEFAULT_CELL_WIDTH, \
-    DEFAULT_CELL_STROKE_STYLE, DEFAULT_CELL_FILL, Cell
+from curses.ascii import SI
+from draw.base import Position
+ # BorderStyle, StrokeStyle DEFAULT_TEXT_STYLE, DEFAULT_MARGIN, DEFAULT_PADDING, \
+from ..shapes.cell import DEFAULT_CELL_HEIGHT, DEFAULT_CELL_WIDTH, \
+    DEFAULT_CELL_FILL #, DEFAULT_CELL_STROKE_STYLE
+from draw.shapes import Cell
+from draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
 
 
 class Row:
@@ -55,6 +58,7 @@ class Row:
         width = 0
         for cell in self.cells:
             cell.set_pos(self.pos.x + width, self.pos.y)
+            print(cell)
             width += cell.width
 
     def set_pos(self, x, y):
@@ -69,8 +73,8 @@ class Row:
         cell_width=DEFAULT_CELL_WIDTH,
         text="",
         fill=DEFAULT_CELL_FILL,
-        stroke_style=DEFAULT_CELL_STROKE_STYLE,
-        text_style=DEFAULT_TEXT_STYLE,
+#        stroke_style=DEFAULT_CELL_STROKE_STYLE,
+#        text_style=DEFAULT_TEXT_STYLE,
         text_anchor="middle",
         text_alignment_baseline="middle",
         margin=DEFAULT_MARGIN,
@@ -86,15 +90,15 @@ class Row:
             height=self.row_height,
             text=text,
             fill=fill,
-            border_style=BorderStyle(
-                stroke_style, stroke_style,
-                stroke_style, stroke_style
-            ),
-            text_style=text_style,
+            # border_style=BorderStyle(
+            #     stroke_style, stroke_style,
+            #     stroke_style, stroke_style
+            # ),
+            # text_style=text_style,
             text_anchor=text_anchor,
             text_alignment_baseline=text_alignment_baseline,
             margin=margin,
-            padding=padding,
+            padding=padding
         )
         self.cells.append(cell)
         self._update_positions()
@@ -107,13 +111,13 @@ class Row:
         cell_width: int = DEFAULT_CELL_WIDTH,
         text: str="",
         fill: str = DEFAULT_CELL_FILL,
-        stroke_style: StrokeStyle = DEFAULT_CELL_STROKE_STYLE
+        #stroke_style: StrokeStyle = DEFAULT_CELL_STROKE_STYLE
     ):
         """
         add multiple columns of same style to the row
         """
         for x in range(col_count):
-            self.add_cell(cell_width, text, fill, stroke_style)
+            self.add_cell(cell_width, text, fill) #, stroke_style)
 
     def draw(self, dwg, grp=None):
         grp = grp or dwg.g()
@@ -125,4 +129,4 @@ class Row:
         return grp
 
     def __repr__(self):
-        return f"GridRow(width={self.width}, heigh={self.height})"
+        return f"GridRow(cells={len(self.cells)})"

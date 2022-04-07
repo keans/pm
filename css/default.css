@@ -1,0 +1,19 @@
+.test {
+    stroke: yellow;
+}
+
+
+.default_text {
+
+}
+
+.defaultcell {
+    stroke: gray;
+    fill: white;
+}
+
+text.defaultcell {
+    font-family: 'Courier New', Courier, monospace;
+    stroke: black;
+    margin-left: 20px;
+}

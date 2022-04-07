@@ -1,12 +1,14 @@
-from draw.base import DEFAULT_MARGIN, DEFAULT_PADDING, DEFAULT_TEXT_STYLE, \
-    DEFAULT_BORDER_STYLE, BorderStyle, Margin, Padding, StrokeStyle, TextStyle
+#from draw.base import DEFAULT_MARGIN, DEFAULT_PADDING, DEFAULT_TEXT_STYLE, \
+#    DEFAULT_BORDER_STYLE, BorderStyle, Margin, Padding, StrokeStyle, TextStyle
+from draw.base import Margin, Padding
+from draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
 from draw.shapes import Box, Text
 
 
 # default cell dimensions
 DEFAULT_CELL_WIDTH = 25
 DEFAULT_CELL_HEIGHT = 25
-DEFAULT_CELL_STROKE_STYLE = StrokeStyle("gray", 1, "round", "round", None)
+#DEFAULT_CELL_STROKE_STYLE = StrokeStyle("gray", 1, "round", "round", None)
 DEFAULT_CELL_FILL = "white"
 
 
@@ -23,12 +25,13 @@ class Cell(Box):
         height: int,
         text: str = "",
         fill: str = DEFAULT_CELL_FILL,
-        border_style: BorderStyle = DEFAULT_BORDER_STYLE,
-        text_style: TextStyle = DEFAULT_TEXT_STYLE,
+        # border_style: BorderStyle = DEFAULT_BORDER_STYLE,
+        # text_style: TextStyle = DEFAULT_TEXT_STYLE,
         text_anchor: str = "middle",
         text_alignment_baseline: str = "middle",
         margin: Margin = DEFAULT_MARGIN,
-        padding: Padding = DEFAULT_PADDING
+        padding: Padding = DEFAULT_PADDING,
+        class_: str = "defaultcell"
     ):
         Box.__init__(
             self,
@@ -37,9 +40,10 @@ class Cell(Box):
             width=width,
             height=height,
             fill=fill,
-            border_style=border_style,
+            # border_style=border_style,
             margin=margin,
-            padding=padding
+            padding=padding,
+            class_=class_
         )
 
         # prepare text
@@ -47,48 +51,40 @@ class Cell(Box):
             x=0,
             y=0,
             text=text,
-            text_style=text_style,
+#            text_style=text_style,
             text_anchor=text_anchor,
-            text_dominant_baseline=text_alignment_baseline
+            text_dominant_baseline=text_alignment_baseline,
+            class_=class_
         )
-
-    @property
-    def width(self):
-        return self.dimension.width
-
-    @property
-    def height(self):
-        return self.dimension.height
 
     def set_pos(self, x, y):
         """
         set cell position
         """
-        self.dimension.x = x
-        self.dimension.y = y
+        self.set_xy(x, y)
 
         # align horizontal text
         if self.text.text_anchor == "start":
-            text_x = self.dimension.x1 + self.padding.left
+            text_x = self.x1  + self.padding.left
 
         elif self.text.text_anchor == "end":
-            text_x = self.dimension.x2 - self.padding.right
+            text_x = self.x2 - self.padding.right
 
         elif self.text.text_anchor == "middle":
-            text_x = self.dimension.cx
+            text_x = self.cx
 
         # align vertical text
         if self.text.text_dominant_baseline == "hanging":
-            text_y = self.dimension.y1 + self.padding.top
+            text_y = self.y1 + self.padding.top
 
         elif self.text.text_dominant_baseline == "auto":
-            text_y = self.dimension.y2 - + self.padding.bottom
+            text_y = self.y2 -  self.padding.bottom
 
         elif self.text.text_dominant_baseline == "middle":
-            text_y = self.dimension.cy
+            text_y = self.cy
 
         # set text position
-        self.text.set_pos(text_x, text_y)
+        self.text.set_xy(text_x, text_y)
 
     def set_fill(self, fill):
         self.fill = fill
@@ -106,4 +102,7 @@ class Cell(Box):
         return grp
 
     def __repr__(self):
-        return f"Cell(dimension={self.dimension})"
+        return (
+            f"<Cell(x1={self.x1}, y1={self.y1}, "
+            f"x2={self.x2}, y2={self.y2})>"
+        )

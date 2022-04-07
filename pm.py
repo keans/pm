@@ -37,6 +37,11 @@ def gantt(filename):
 
     # draw the gantt chart
     dwg = svgwrite.Drawing(size=("1900", "600"))
+
+    # add default css for formatting
+    # TODO: make configurable via parameter?!
+    dwg.add_stylesheet("css/default.css", "default")
+
     #g = Gantt(100, 100, project=p)
     g = Gantt(100, 100, p)
 

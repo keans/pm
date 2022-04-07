@@ -1,4 +1,5 @@
 from draw.base import Position
+from .row import Row
 
 
 class Grid:
@@ -20,7 +21,7 @@ class Grid:
         self.pos = Position(x, y)
         self._update_positions()
 
-    def add_row(self, row):
+    def add_row(self, row: Row):
         """
         add a row to the grid's rows
         """
