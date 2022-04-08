@@ -1,4 +1,5 @@
-from draw.base import Dimension
+from draw.base import Dimension, Margin, Padding
+from draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
 
 
 class Bar(Dimension):
@@ -16,8 +17,8 @@ class Bar(Dimension):
         ry: int = 3,
         fill: str = "white",
         stroke: str = "black",
-        #margin: Margin = DEFAULT_MARGIN,
-        #padding: Padding = DEFAULT_PADDING,
+        margin: Margin = DEFAULT_MARGIN,
+        padding: Padding = DEFAULT_PADDING,
         class_: str = "defaultbar",
     ):
         Dimension.__init__(self, x, y, width, height)
@@ -25,8 +26,8 @@ class Bar(Dimension):
         self.ry = ry
         self.stroke = stroke
         self.fill = fill
-        #self.margin = margin
-        #self.padding = padding
+        self.margin = margin
+        self.padding = padding
         self.class_ = class_
 
     def draw(self, dwg, grp=None):
@@ -36,12 +37,12 @@ class Bar(Dimension):
         grp.add(
             dwg.rect(
                 (
-                    self.x1, # + self.margin.left,
-                    self.y1 #+ self.margin.top,
+                    self.x1 + self.margin.left,
+                    self.y1 + self.margin.top,
                 ),
                 (
-                    self.width, # - self.margin.right - self.margin.left,
-                    self.height # - self.margin.bottom - self.margin.top,
+                    self.width - self.margin.right - self.margin.left,
+                    self.height - self.margin.bottom - self.margin.top,
                 ),
                 stroke=self.stroke,
                 fill=self.fill,

@@ -1,3 +1,3 @@
 from .grid import Grid
-from .row import Row
+from .gridrow import GridRow
 from .gridwithbars import GridWithBars

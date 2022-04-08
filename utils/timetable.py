@@ -18,7 +18,7 @@ class Timetable:
         end_date: datetime,
         year_format: str = "%Y",
         quarter_format: str = "Q",
-        month_format: str = "%b",
+        month_format: str = "%B",
         week_format: str = "CW%V",
         day_format: str ="%d"
     ):
@@ -33,7 +33,7 @@ class Timetable:
         self.week_format = week_format
         self.day_format = day_format
 
-    def _get(self, dt_type: DateType):
+    def _get(self, dt_type: DateType) -> list:
         # get all timetable items between start and end date
         tt_items = [
             TimetableItem(

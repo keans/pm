@@ -9,6 +9,10 @@ workpackages:
       - name: My Task
         start_date: "2022-03-02"
         duration: 1w
+        milestones:
+          - name: MS1
+            responsible: John Doe
+            date: "2022-03-07"
       - name: My Task2
         start_date: "2022-03-11"
         duration: 1w
@@ -16,8 +20,14 @@ workpackages:
       - name: My Task3
         start_date: "2022-03-12"
         duration: 1w
+        milestones:
+          - name: MS2
+            responsible: John Doe
+            date: "2022-03-04"
+          - name: MS3
+            responsible: John Doe
+            date: "2022-03-17"
       - name: My Task4
         start_date: "2022-03-18"
         duration: 1w
         depends_on: My Task3
-

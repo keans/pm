@@ -27,6 +27,27 @@ class Dimension:
         return (self.pos.x, self.pos.y, self.size.width, self.size.height)
 
     @property
+    def x(self) -> int:
+        """
+        return x
+
+        :return: x
+        :rtype: int
+        """
+        return self.pos.x
+
+    @property
+    def y(self) -> int:
+        """
+        return y
+
+        :return: y
+        :rtype: int
+        """
+        return self.pos.y
+
+
+    @property
     def xy(self) -> tuple:
         """
         return the (x, y) tuple
@@ -35,6 +56,16 @@ class Dimension:
         :rtype: tuple
         """
         return (self.pos.x, self.pos.y)
+
+    @property
+    def x2y2(self) -> tuple:
+        """
+        return the (x2, y2) tuple
+
+        :return: (x2, y2)-tuple
+        :rtype: tuple
+        """
+        return (self.pos.x + self.size.width, self.pos.y + self.size.height)
 
     @property
     def wh(self) -> tuple:

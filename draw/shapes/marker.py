@@ -15,13 +15,18 @@ class Marker(Dimension):
         cy: int,
         width: int,
         height: int = None,
-        #stroke_style: StrokeStyle = DEFAULT_STROKE_STYLE,
         fill: str = "black",
-        class_: str = ""
+        class_: str = "defaultmarker"
     ):
-        Dimension.__init__(self, cx - width/2, cy - height/2, width, height)
+        Dimension.__init__(
+            self,
+            x=int(cx - width/2),
+            y=int(cy - height/2),
+            width=width,
+            height=height
+        )
+
         self.symbol = symbol
-        #self.stroke_style = stroke_style
         self.fill = fill
         self.class_ = class_
 
@@ -29,27 +34,36 @@ class Marker(Dimension):
         grp = grp or dwg.g()
 
         if self.symbol == "d":
+            # diamond
             grp.add(
-                self.parent.polygon(
+                dwg.polygon(
                     [
                         (
-                            self.dimension.x + self.dimension.width / 2,
-                            self.dimension.y
-                        ),
-                        (
-                            self.dimension.x,
-                            self.dimension.y - self.h / 2
-                        ),
-                        (
-                            self.dimenison.x + self.w / 2,
+                            int(self.cx + self.width / 2),
                             self.cy
                         ),
                         (
-                            self.dimension.x,
-                            self.cy + self.h / 2
+                            self.cx,
+                            int(self.cy - self.height / 2)
+                        ),
+                        (
+                            int(self.cx + self.width/ 2),
+                            self.cy
+                        ),
+                        (
+                            int(self.cx),
+                            int(self.cy + self.height / 2)
+                        ),
+                        (
+                            int(self.cx - self.width/ 2),
+                            self.cy
+                        ),
+                        (
+                            int(self.cx),
+                            int(self.cy - self.height / 2)
                         )
                     ],
-                    stroke=self.stroke,
+                    stroke="black",
                     fill=self.fill,
                     class_ = self.class_
                 )

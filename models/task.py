@@ -1,5 +1,7 @@
 import datetime
 
+from models.milestone import Milestone
+
 
 class Task:
     """
@@ -21,6 +23,7 @@ class Task:
         self.is_done = is_done
 
         self.dependencies = []
+        self.milestones = []
 
     @property
     def end_date(self):
@@ -30,7 +33,17 @@ class Task:
         """
         add another task as dependency
         """
+        assert isinstance(dependency, Task)
+
         self.dependencies.append(dependency)
+
+    def add_milestone(self, milestone: "Milestone"):
+        """
+        add milestone to the task
+        """
+        assert isinstance(milestone, Milestone)
+
+        self.milestones.append(milestone)
 
     def __repr__(self):
         return (

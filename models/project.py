@@ -92,14 +92,14 @@ class Project:
                 )
                 workpackage.add_task(task)
 
-            # add milestones to workpackage
-            for ms in wp.get("milestones", []):
-                milestone = Milestone(
-                    ms["name"],
-                    ms.get("responsible", "tbd"),
-                    dateutil_parse(ms["date"]),
-                )
-                workpackage.add_milestone(milestone)
+                # add milestones to workpackage
+                for ms in t.get("milestones", []):
+                    milestone = Milestone(
+                        ms["name"],
+                        ms.get("responsible", "tbd"),
+                        dateutil_parse(ms["date"]),
+                    )
+                    task.add_milestone(milestone)
 
     def __repr__(self):
         return (

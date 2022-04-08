@@ -1,3 +1,5 @@
+from svgwrite import Drawing
+from svgwrite.container import Group
 from svgwrite.path import Path
 
 from draw.base import Dimension
@@ -13,43 +15,33 @@ class PathWithArrow(Dimension):
         y1: int,
         x2: int,
         y2: int,
-#        stroke_style: StrokeStyle = DEFAULT_PATH_ARROW_STYLE,
+        arrow_size: int = 8,
         class_: str = "defaultpathwitharrow"
     ):
         Dimension.__init__(self, x1, y1, x2 - x1, y2 - y1)
-        #self.stroke_style = stroke_style
+
+        self.arrow_size = arrow_size
         self.class_ = class_
 
-    def draw(self, dwg, grp=None):
+    def draw(self, dwg: Drawing, grp: Group = None):
+        # get group
         grp = grp or dwg
-
-        # extra = {
-        #     "stroke": self.stroke_style.stroke,
-        #     "stroke_width": self.stroke_style.width,
-        #     "stroke_linecap": self.stroke_style.linecap,
-        #     "stroke_linejoin": self.stroke_style.linejoin,
-        #     "fill": "none",
-        #     "marker-end": "url(#arrow)"
-        # }
-
-        arrow_size = 4
 
         # prepare arrow marker
         arrow = dwg.marker(
             id="arrow",
-            insert=(1, arrow_size / 2),
-            size=(arrow_size, arrow_size),
+            insert=(1, self.arrow_size / 2),
+            size=(self.arrow_size, self.arrow_size),
             orient="auto",
             markerUnits="strokeWidth"
         )
-        arrow.viewbox(width=arrow_size, height=arrow_size)
+        arrow.viewbox(width=self.arrow_size, height=self.arrow_size)
         arrow.add(
             dwg.polyline(
                 [
-                    (0,0), (arrow_size,arrow_size/2),
-                    (0,arrow_size), (1,arrow_size/2)
+                    (0, 0), (self.arrow_size, self.arrow_size / 2),
+                    (0, self.arrow_size), (1, self.arrow_size / 2)
                 ],
-                #fill=self.stroke_style.stroke
             )
         )
         dwg.defs.add(arrow)
@@ -58,7 +50,9 @@ class PathWithArrow(Dimension):
 
         path = Path(
             d=("M", self.x1 - 2, self.y1),
-            #**extra
+            **{
+                "marker-end": "url(#arrow)"
+            }
         )
         path.push("L", self.x1 + 5, self.y1)
 

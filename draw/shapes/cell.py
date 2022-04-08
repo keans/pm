@@ -1,3 +1,6 @@
+from svgwrite import Drawing
+from svgwrite.container import Group
+
 #from draw.base import DEFAULT_MARGIN, DEFAULT_PADDING, DEFAULT_TEXT_STYLE, \
 #    DEFAULT_BORDER_STYLE, BorderStyle, Margin, Padding, StrokeStyle, TextStyle
 from draw.base import Margin, Padding
@@ -51,17 +54,16 @@ class Cell(Box):
             x=0,
             y=0,
             text=text,
-#            text_style=text_style,
             text_anchor=text_anchor,
             text_dominant_baseline=text_alignment_baseline,
             class_=class_
         )
 
-    def set_pos(self, x, y):
+    def set_xy(self, x, y):
         """
         set cell position
         """
-        self.set_xy(x, y)
+        Box.set_xy(self, x, y)
 
         # align horizontal text
         if self.text.text_anchor == "start":
@@ -89,7 +91,7 @@ class Cell(Box):
     def set_fill(self, fill):
         self.fill = fill
 
-    def draw(self, dwg, grp=None):
+    def draw(self, dwg: Drawing, grp: Group = None):
         grp = grp or dwg.g()
 
         # draw box in background

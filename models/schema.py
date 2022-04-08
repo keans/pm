@@ -75,24 +75,24 @@ schema = {
                             },
                             "depends_on": {
                                 "type": "string",
+                            },
+                            "milestones": {
+                                "type": "list",
+                                "schema": {
+                                    "type": "dict",
+                                    "schema": {
+                                        "name": {"type": "string"},
+                                        "responsible": {"type": "string"},
+                                        "date": {
+                                            "type": "string",
+                                            "check_with": is_date,
+                                        },
+                                    }
+                                }
                             }
                         }
                     }
                 },
-                "milestones": {
-                    "type": "list",
-                    "schema": {
-                        "type": "dict",
-                        "schema": {
-                            "name": {"type": "string"},
-                            "responsible": {"type": "string"},
-                            "date": {
-                                "type": "string",
-                                "check_with": is_date,
-                            },
-                        }
-                    }
-                }
             }
         }
     }

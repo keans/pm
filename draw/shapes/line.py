@@ -11,9 +11,12 @@ class Line(Dimension):
         y1: int,
         x2: int,
         y2: int,
+        class_: str = "defaultline"
 #        stroke_style=DEFAULT_STROKE_STYLE
     ):
-        Dimension.__init__(self, x1, y1, x2 - x1, y2 - y2)
+        Dimension.__init__(self, x1, y1, x2 - x1, y2 - y1)
+        self.class_ = class_
+
 #        self.stroke_style = stroke_style
 
     def draw(self, dwg, grp=None):
@@ -29,10 +32,12 @@ class Line(Dimension):
 
         grp.add(
             dwg.line(
-                self.xy, self.wh
+                self.xy,
+                self.x2y2,
                 #self.start_position,
                 #self.end_position,
                 #**extra
+                class_=self.class_
             )
         )
 

@@ -7,8 +7,8 @@ from pathlib import Path
 import svgwrite
 import click
 
-from draw.grid import GridWithBars, Row
-from draw.gantt import Gantt
+from draw.widgets.grid import GridWithBars, GridRow
+from draw.widgets.gantt.gantt import Gantt
 
 from models import Project
 
