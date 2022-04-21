@@ -15,7 +15,7 @@ class PathWithArrow(Dimension):
         y1: int,
         x2: int,
         y2: int,
-        arrow_size: int = 8,
+        arrow_size: int = 6,
         class_: str = "defaultpathwitharrow"
     ):
         Dimension.__init__(self, x1, y1, x2 - x1, y2 - y1)
@@ -58,15 +58,15 @@ class PathWithArrow(Dimension):
 
         if self.x1 >= self.x2:
             # same x position => go down and back
-            path.push("L", self.x1 + 5, self.y1 + h)
-            path.push("L", self.x2 - 5, self.y1 + h)
-            path.push("L", self.x2 - 5, self.y2)
-            path.push("L", self.x2, self.y2)
+            path.push("L", self.x1 + 5, self.y1 + h + 1)
+            path.push("L", self.x2 - 5, self.y1 + h + 1)
+            path.push("L", self.x2 - 5, self.y2 + 1)
+            path.push("L", self.x2 - 2, self.y2 + 1)
 
         else:
             # far away x position => simply go down
             path.push("L", self.x1 + 5, self.y2)
-            path.push("L", self.x2, self.y2)
+            path.push("L", self.x2 - 2, self.y2)
 
         grp.add(path)
 

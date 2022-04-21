@@ -167,3 +167,22 @@ class Gantt(GridWithBars):
                     )
 
                 i += 1
+
+            # add additional class for last row
+            for cell in self.rows[-1].cells:
+                cell.class_ += " lastrow"
+
+            # add special attributes for first cells and last cell in row
+            for row in self.rows:
+                row.cells[1].class_ += " firstcol"
+                row.cells[-1].class_ += " lastcol"
+
+        # add vertical lines to the grid
+        for event in self.project.events:
+            pos = Position(
+                y=self.timetable.get_pos(event.date),
+                x=self.timetable.hierarchy_count()
+            )
+            self.add_event(pos)
+
+# TODO: USE HIERARCHY COUNT TO GET CORRECT LENGTH

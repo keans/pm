@@ -2,7 +2,7 @@ from svgwrite import Drawing
 from svgwrite.container import Group
 
 from draw.base import Position, Margin
-from draw.shapes import Bar, PathWithArrow, Marker
+from draw.shapes import Bar, PathWithArrow, Marker, Line
 from draw.widgets.grid import Grid
 
 
@@ -20,6 +20,7 @@ class GridWithBars(Grid):
         self.bars = []
         self.dependencies = []
         self.milestones = []
+        self.events = []
 
     def add_bar(
         self,
@@ -39,7 +40,7 @@ class GridWithBars(Grid):
             width=end_cell.x2 - start_cell.x1,
             height=start_cell.height,
             fill=fill,
-            margin=Margin(2, 2, 2, 2)
+            margin=Margin(3, 2, 3, 2)
         )
         self.bars.append(bar)
 
@@ -89,6 +90,26 @@ class GridWithBars(Grid):
         )
         self.milestones.append(marker)
 
+    def add_event(
+        self,
+        position: Position,
+    ):
+        """
+        add an event to the grid
+        """
+        start_cell = self.get_cell(*position.tuple)
+        #end_cell = self.get_cell(position.x, len(self.rows)-1)
+        end_cell = self.get_cell(position.x, len(self.rows)-1)
+
+        event = Line(
+            x1=start_cell.cx,
+            y1=start_cell.pos.y,
+            x2=start_cell.cx,
+            y2=start_cell.pos.y + end_cell.pos.y,
+            class_="defaultevent"
+        )
+        self.events.append(event)
+
     def draw(self, dwg: Drawing, grp: Group = None) -> Group:
         """
         draw grid with bars including bars and dependency arrows
@@ -102,6 +123,12 @@ class GridWithBars(Grid):
         """
         # get group
         grp = Grid.draw(self, dwg, grp)
+
+        # draw vertical lines
+        events_group = dwg.g()
+        for event in self.events:
+            event.draw(dwg, events_group)
+        grp.add(events_group)
 
         # draw bars
         bars_grp = dwg.g()

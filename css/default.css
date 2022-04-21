@@ -5,6 +5,7 @@
 path {
     fill: none;
     stroke: black;
+    stroke-width: 2;
 }
 
 .background.defaultcell {
@@ -38,29 +39,17 @@ rect.defaultcell.weekend, rect.defaultcell.header.weekend {
     fill: lightgray;
 }
 
-/* lines */
-line.defaultcell.top {
-//    stroke: red;
-}
-
-line.defaultcell.left {
-//    stroke: green;
-}
-
-line.defaultcell.bottom {
-//    stroke: blue;
-}
-
-line.defaultcell.right {
-//    stroke: pink;
-}
-
-
 /* workpackage rectangle */
 line.defaultcell.workpackage.top, line.defaultcell.workpackage.left,
 line.defaultcell.workpackage.bottom, line.defaultcell.workpackage.right {
     stroke: black;
     stroke-dasharray: 0;
+}
+
+line.defaultevent {
+    stroke: red;
+    stroke-dasharray: 4;
+    stroke-width: 2;
 }
 
 text.defaultcell.workpackage {
@@ -133,6 +122,12 @@ text.defaultcell.day {
 
 /* dashed lines between days */
 line.defaultcell.day.left, line.defaultcell.day.right {
-    stroke: gray;
+    stroke: black;
     stroke-dasharray: 2;
+}
+
+/* solid line on first and last day of day grid as well as on last row*/
+line.day.firstcol.left, line.day.lastcol.right, line.lastrow.bottom {
+    stroke: black !important;
+    stroke-dasharray: 0;
 }

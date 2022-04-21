@@ -6,7 +6,7 @@ from dateutil.parser import parse as dateutil_parse
 from pytimeparse import parse as pytimeparse_parse
 
 from models.schema import schema
-from models import Workpackage, Task, Milestone
+from models import Workpackage, Task, Milestone, Event
 
 
 class Project:
@@ -68,6 +68,14 @@ class Project:
         self.responsible = project["responsible"]
         self.start_date = dateutil_parse(project["start_date"], dayfirst=True)
         self.end_date = dateutil_parse(project["end_date"])
+
+        self.events = []
+        for ev in project.get("events", []):
+            event = Event(
+                name=ev["name"],
+                date=dateutil_parse(ev["date"])
+            )
+            self.events.append(event)
 
         self.workpackages = []
         for wp in project.get("workpackages", []):

@@ -45,6 +45,22 @@ schema = {
         "required": True,
         "check_with": is_date
     },
+    "events": {
+        "type": "list",
+        "schema": {
+            "type": "dict",
+            "schema": {
+                "name": {
+                    "type": "string",
+                    "required": True
+                },
+                "date": {
+                    "type": "string",
+                    "check_with": is_date,
+                },
+            },
+        },
+    },
     "workpackages": {
         "type": "list",
         "schema": {

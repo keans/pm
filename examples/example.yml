@@ -2,6 +2,9 @@ name: example
 start_date: "2022-01-03"
 end_date: "2022-05-01"
 responsible: John Doe
+events:
+  - name: today
+    date: "2022-03-14"
 workpackages:
   - name: WP1
     responsible: John Doe
