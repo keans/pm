@@ -1,3 +1,6 @@
+from svgwrite import Drawing
+from svgwrite.container import Group
+
 from draw.base.dimension import Dimension
 
 
@@ -12,38 +15,40 @@ class Line(Dimension):
         x2: int,
         y2: int,
         class_: str = "defaultline"
-#        stroke_style=DEFAULT_STROKE_STYLE
     ):
         Dimension.__init__(self, x1, y1, x2 - x1, y2 - y1)
         self.class_ = class_
 
-#        self.stroke_style = stroke_style
+    def draw(self, dwg: Drawing, grp: Group = None) -> Group:
+        """
+        draw line and return it as group
 
-    def draw(self, dwg, grp=None):
+        :param dwg: drawing used to draw the items
+        :type dwg: Drawing
+        :param grp: group, defaults to None
+        :type grp: Group, optional
+        :return: group with drawn items
+        :rtype: Group
+        """
         grp = grp or dwg
-        # extra = {
-        #     "stroke": self.stroke_style.stroke,
-        #     "stroke_width": self.stroke_style.width,
-        #     "stroke_linecap": self.stroke_style.linecap,
-        #     "stroke_linejoin": self.stroke_style.linejoin
-        # }
-        # if self.stroke_style.dasharray not in (None, ""):
-        #     extra["stroke_dasharray"] = self.stroke_style.dasharray
 
         grp.add(
             dwg.line(
                 self.xy,
                 self.x2y2,
-                #self.start_position,
-                #self.end_position,
-                #**extra
                 class_=self.class_
             )
         )
 
         return grp
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """
+        returns the string representation of the line
+
+        :return: string representation of the line
+        :rtype: str
+        """
         return (
             f"<Line(x1={self.x1}, y1={self.y1}, "
             f"x2={self.x2}, y2={self.y2})>"

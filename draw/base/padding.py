@@ -24,7 +24,13 @@ class Padding:
         """
         return (self.top, self.right, self.bottom, self.left)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """
+        returns the string representation of the padding
+
+        :return: string representation of the padding
+        :rtype: str
+        """
         return (
             f"<Padding(top={self.top}, right={self.right}, "
             f"bottom={self.bottom}, left={self.left})>"

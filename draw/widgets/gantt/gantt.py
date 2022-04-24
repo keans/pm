@@ -1,6 +1,5 @@
 from draw.base import Position, Padding
 from draw.shapes.cell import DEFAULT_CELL_FILL, DEFAULT_CELL_WIDTH
-from draw.shapes.marker import Marker
 from draw.widgets.grid import GridWithBars, GridRow
 from models.project import Project
 from models.types import DateType
@@ -156,7 +155,7 @@ class Gantt(GridWithBars):
                         x=self.timetable.hierarchy_count() + i,
                         y=self.timetable.get_pos(m.date) + 1
                     )
-                    self.add_milestone(pos)
+                    self.add_milestone(pos, m.name)
 
                 # add dependency arrows
                 depend_pos = cellpos.get(t.depends_on)
@@ -183,6 +182,6 @@ class Gantt(GridWithBars):
                 y=self.timetable.get_pos(event.date),
                 x=self.timetable.hierarchy_count()
             )
-            self.add_event(pos)
+            self.add_event(pos, self.timetable.hierarchy_count())
 
 # TODO: USE HIERARCHY COUNT TO GET CORRECT LENGTH

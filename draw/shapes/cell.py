@@ -3,7 +3,7 @@ from svgwrite.container import Group
 
 #from draw.base import DEFAULT_MARGIN, DEFAULT_PADDING, DEFAULT_TEXT_STYLE, \
 #    DEFAULT_BORDER_STYLE, BorderStyle, Margin, Padding, StrokeStyle, TextStyle
-from draw.base import Margin, Padding
+from draw.base import Margin, Padding, Dimension
 from draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
 from draw.shapes import Box, Text
 
@@ -59,7 +59,7 @@ class Cell(Box):
             class_=class_
         )
 
-    def set_xy(self, x, y):
+    def set_xy(self, x: int, y: int):
         """
         set cell position
         """
@@ -91,20 +91,36 @@ class Cell(Box):
     def set_fill(self, fill):
         self.fill = fill
 
-    def draw(self, dwg: Drawing, grp: Group = None):
+    def draw(self, dwg: Drawing, grp: Group = None) -> Group:
+        """
+        draw cell and return it as group
+
+        :param dwg: drawing used to draw the items
+        :type dwg: Drawing
+        :param grp: group, defaults to None
+        :type grp: Group, optional
+        :return: group with drawn items
+        :rtype: Group
+        """
         grp = grp or dwg.g()
 
         # draw box in background
         Box.draw(self, dwg, grp)
 
-        # draw text on top
+        # draw text on top, if set
         if self.text.text != "":
             self.text.draw(dwg, grp)
 
         return grp
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """
+        returns the string representation of the cell
+
+        :return: string representation of the cell
+        :rtype: str
+        """
         return (
             f"<Cell(x1={self.x1}, y1={self.y1}, "
-            f"x2={self.x2}, y2={self.y2})>"
+            f"x2={self.x2}, y2={self.y2}, text='{self.text}')>"
         )

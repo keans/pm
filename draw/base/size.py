@@ -42,6 +42,7 @@ class Size:
         assert isinstance(value, int)
 
         self._width = value
+        self.on_size_changed(self)
 
     @property
     def height(self) -> int:
@@ -64,8 +65,13 @@ class Size:
         assert isinstance(value, int)
 
         self._height = value
+        self.on_size_changed(self)
 
-    def set_wh(self, width: int, height: int):
+    def set_wh(
+        self,
+        width: int,
+        height: int
+    ):
         """
         set width and height at the same time
 
@@ -89,7 +95,22 @@ class Size:
         self.width = size.width
         self.height = size.height
 
-    def __repr__(self):
+    def on_size_changed(self, size: "Size"):
+        """
+        override this method in a subclass to obtain size changes
+
+        :param pos: new size
+        :type pos: Size
+        """
+        pass
+
+    def __repr__(self) -> str:
+        """
+        returns string representation of the size
+
+        :return: string representation of the size
+        :rtype: str
+        """
         return (
             f"<Size(width={self.width}, height={self.height}>"
         )

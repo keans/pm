@@ -1,3 +1,6 @@
+from svgwrite import Drawing
+from svgwrite.container import Group
+
 from draw.base import Position
 
 
@@ -10,7 +13,6 @@ class Text(Position):
         x: int,
         y: int,
         text: str,
-        #text_style: TextStyle = DEFAULT_TEXT_STYLE,
         text_anchor: str = "middle",
         text_dominant_baseline: str = "middle",
         class_: str = "default_text"
@@ -20,20 +22,25 @@ class Text(Position):
         self.text = text
         self.text_anchor = text_anchor
         self.text_dominant_baseline = text_dominant_baseline
-        #self.text_style = text_style
         self.class_ = class_
 
-    def draw(self, dwg, grp=None):
+    def draw(self, dwg: Drawing, grp: Group = None) -> Group:
+        """
+        draw text and return it as group
+
+        :param dwg: drawing used to draw the items
+        :type dwg: Drawing
+        :param grp: group, defaults to None
+        :type grp: Group, optional
+        :return: group with drawn items
+        :rtype: Group
+        """
         grp = grp or dwg
 
         grp.add(
             dwg.text(
                 text=self.text,
                 insert=(self.x, self.y),
-                # fill=self.text_style.fill,
-                # font_size=self.text_style.font_size,
-                # font_family=self.text_style.font_family,
-                # font_weight=self.text_style.font_weight,
                 text_anchor=self.text_anchor,
                 dominant_baseline=self.text_dominant_baseline,
                 class_=self.class_
@@ -41,3 +48,15 @@ class Text(Position):
         )
 
         return grp
+
+    def __repr__(self) -> str:
+        """
+        returns the string representation of the text
+
+        :return: string representation of the text
+        :rtype: str
+        """
+        return (
+            f"<Text(x={self.x}, y={self.y}, "
+            f"text='{self.text}')>"
+        )

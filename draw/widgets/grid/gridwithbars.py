@@ -72,6 +72,7 @@ class GridWithBars(Grid):
     def add_milestone(
         self,
         pos: Position,
+        text: str
     ):
         """
         add milestone to the grid
@@ -82,30 +83,39 @@ class GridWithBars(Grid):
         cell = self.get_cell(*pos.tuple)
 
         marker= Marker(
-            symbol="d",
+            symbol="v",
             cx=cell.cx,
             cy=cell.cy,
             width=12,
-            height=12
+            height=12,
+            text=text,
+            text_y_offset=20,
         )
         self.milestones.append(marker)
 
     def add_event(
         self,
         position: Position,
+        hierarchy_count: int
     ):
         """
         add an event to the grid
         """
         start_cell = self.get_cell(*position.tuple)
-        #end_cell = self.get_cell(position.x, len(self.rows)-1)
-        end_cell = self.get_cell(position.x, len(self.rows)-1)
+        end_cell = self.get_cell(
+            position.x + len(self.rows) - hierarchy_count - 1,
+            position.y
+        )
 
+        #
+        # TODO: combine line + marker + text in new vertical line event
+        #
+        #
         event = Line(
             x1=start_cell.cx,
             y1=start_cell.pos.y,
             x2=start_cell.cx,
-            y2=start_cell.pos.y + end_cell.pos.y,
+            y2=end_cell.pos.y + 50,
             class_="defaultevent"
         )
         self.events.append(event)

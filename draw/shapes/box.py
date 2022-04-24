@@ -1,3 +1,6 @@
+from svgwrite import Drawing
+from svgwrite.container import Group
+
 from draw.base import Dimension, Margin, Padding
 from draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
 from draw.shapes.line import Line
@@ -21,14 +24,23 @@ class Box(Dimension):
         class_: str = "defaultbox"
     ):
         Dimension.__init__(self, x, y, width, height)
-        
+
         self.fill = fill
         self.margin = margin
         self.padding = padding
         self.class_ = class_
 
-    def draw(self, dwg, grp=None):
-        # get group
+    def draw(self, dwg: Drawing, grp: Group = None) -> Group:
+        """
+        draw box and return it as group
+
+        :param dwg: drawing used to draw the items
+        :type dwg: Drawing
+        :param grp: group, defaults to None
+        :type grp: Group, optional
+        :return: group with drawn items
+        :rtype: Group
+        """
         grp = grp or dwg.g()
 
         # rectangle for background
@@ -88,5 +100,11 @@ class Box(Dimension):
 
         return grp
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """
+        returns string representation of the box
+
+        :return: string representation of the box
+        :rtype: str
+        """
         return f"<Box(dimension={self})>"

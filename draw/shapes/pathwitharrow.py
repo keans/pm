@@ -7,7 +7,7 @@ from draw.base import Dimension
 
 class PathWithArrow(Dimension):
     """
-    path with an arrow at the end
+    path with an arrow at the tail
     """
     def __init__(
         self,
@@ -23,8 +23,17 @@ class PathWithArrow(Dimension):
         self.arrow_size = arrow_size
         self.class_ = class_
 
-    def draw(self, dwg: Drawing, grp: Group = None):
-        # get group
+    def draw(self, dwg: Drawing, grp: Group = None) -> Group:
+        """
+        draw path with arrow and return it as group
+
+        :param dwg: drawing used to draw the items
+        :type dwg: Drawing
+        :param grp: group, defaults to None
+        :type grp: Group, optional
+        :return: group with drawn items
+        :rtype: Group
+        """
         grp = grp or dwg
 
         # prepare arrow marker
@@ -71,3 +80,16 @@ class PathWithArrow(Dimension):
         grp.add(path)
 
         return grp
+
+    def __repr__(self) -> str:
+        """
+        returns the string representation of the path with arrow
+
+        :return: string representation of the path with arrow
+        :rtype: str
+        """
+        return (
+            f"<PathWithArrow(x1={self.x1}, y1={self.y1}, "
+            f"x2={self.x2}, y2={self.y2}, "
+            f"arrow_size={self.arrow_size})>"
+        )

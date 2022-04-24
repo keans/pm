@@ -42,6 +42,7 @@ class Position:
         assert isinstance(value, int)
 
         self._x = value
+        self.on_position_changed(self)
 
     @property
     def y(self) -> int:
@@ -64,6 +65,7 @@ class Position:
         assert isinstance(value, int)
 
         self._y = value
+        self.on_position_changed(self)
 
     def set_xy(self, x: int, y: int):
         """
@@ -89,7 +91,22 @@ class Position:
         self.x = pos.x
         self.y = pos.y
 
-    def __repr__(self):
+    def on_position_changed(self, pos: "Position"):
+        """
+        override this method in a subclass to obtain position changes
+
+        :param pos: new position
+        :type pos: Position
+        """
+        pass
+
+    def __repr__(self) -> str:
+        """
+        returns string representation of the position
+
+        :return: representation of the position
+        :rtype: str
+        """
         return (
             f"<Position(x={self.x}, y={self.y}>"
         )

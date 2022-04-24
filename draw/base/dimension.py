@@ -107,6 +107,16 @@ class Dimension:
         """
         return self._pos
 
+    @property
+    def cpos(self) -> Position:
+        """
+        return center position
+
+        :return: center position
+        :rtype: Position
+        """
+        return Position(self.cx, self.cy)
+
     @pos.setter
     def pos(self, value: Position):
         """
@@ -115,6 +125,7 @@ class Dimension:
         assert isinstance(value, Position)
 
         self._pos = value
+        self.on_dimension_changed(self)
 
     @property
     def size(self) -> Size:
@@ -134,6 +145,7 @@ class Dimension:
         assert isinstance(value, Size)
 
         self._size = value
+        self.on_dimension_changed(self)
 
     def set_xy(self, x: int, y: int):
         """
@@ -198,10 +210,18 @@ class Dimension:
 
     @property
     def cx(self) -> int:
+        if getattr(self, "_size", None) is None:
+            # size not yet set
+            return -1
+
         return int(self.pos.x + self.size.width / 2)
 
     @property
     def cy(self) -> int:
+        if getattr(self, "_size", None) is None:
+            # size not yet set
+            return -1
+
         return int(self.pos.y + self.size.height / 2)
 
     @property
@@ -224,8 +244,22 @@ class Dimension:
 
         self.size.height = value
 
+    def on_dimension_changed(self, dim: "Dimension"):
+        """
+        override this method in a subclass to obtain dimension changes
 
-    def __repr__(self):
+        :param pos: new dimension
+        :type pos: Dimension
+        """
+        pass
+
+    def __repr__(self) -> str:
+        """
+        returns the string reprentation of the dimension
+
+        :return: string reprentation of the dimension
+        :rtype: str
+        """
         return (
             f"<Dimension(x={self.pos.x}, y={self.pos.y}, "
             f"width={self.size.width}, height={self.size.height})>"
