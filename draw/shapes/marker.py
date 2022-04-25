@@ -1,6 +1,7 @@
 from svgwrite import Drawing
 from svgwrite.container import Group
 from svgwrite.shapes import Polygon, Circle, Rect
+from svgwrite.path import Path
 
 from draw.base import Dimension
 from draw.shapes import Text
@@ -18,6 +19,8 @@ class Marker(Dimension):
         "s": "_square",
         "^": "_triangle",
         "v": "_triangle_down",
+        "x": "_x",
+        "+": "_plus",
     }
 
     def __init__(
@@ -238,6 +241,70 @@ class Marker(Dimension):
             class_ = self.class_
         )
 
+    def _x(self, dwg: Drawing) -> Path:
+        """
+        returns X path
+
+        :param dwg: drawing that is used to create the X
+        :type dwg: Drawing
+        :return: X path
+        :rtype: Path
+        """
+        # prepare X path
+        p = [
+            "M {}, {}".format(
+                int(self.cx - self.width / 2), int(self.cy - self.height / 2)
+            ),
+            "L {}, {}".format(
+                int(self.cx + self.width / 2), int(self.cy + self.height / 2)
+            ),
+            "M {}, {}".format(
+                int(self.cx + self.width / 2), int(self.cy - self.height / 2)
+            ),
+            "L {}, {}".format(
+                int(self.cx - self.width / 2), int(self.cy + self.height / 2)
+            ),
+        ]
+
+        return dwg.path(
+            d=" ".join(p),
+            stroke="black",
+            fill=self.fill,
+            class_ = self.class_
+        )
+
+    def _plus(self, dwg: Drawing) -> Path:
+        """
+        returns plus path
+
+        :param dwg: drawing that is used to create the plus
+        :type dwg: Drawing
+        :return: plus path
+        :rtype: Path
+        """
+        # prepare X path
+        p = [
+            "M {}, {}".format(
+                self.cx, int(self.cy - self.height / 2)
+            ),
+            "L {}, {}".format(
+                self.cx, int(self.cy + self.height / 2)
+            ),
+            "M {}, {}".format(
+                int(self.cx - self.width / 2), self.cy
+            ),
+            "L {}, {}".format(
+                int(self.cx + self.width / 2), self.cy
+            ),
+        ]
+
+        return dwg.path(
+            d=" ".join(p),
+            stroke="black",
+            fill=self.fill,
+            class_ = self.class_
+        )
+
     def draw(self, dwg: Drawing, grp: Group = None) -> Group:
         """
         draw marker and return it as group
@@ -270,6 +337,14 @@ class Marker(Dimension):
         elif self.symbol == "v":
             # triangle
             grp.add(self._triangle_down(dwg))
+
+        elif self.symbol == "x":
+            # X
+            grp.add(self._x(dwg))
+
+        elif self.symbol == "+":
+            # plus
+            grp.add(self._plus(dwg))
 
         # draw text on top, if set
         if self.text.text != "":

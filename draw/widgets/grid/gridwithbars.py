@@ -83,7 +83,7 @@ class GridWithBars(Grid):
         cell = self.get_cell(*pos.tuple)
 
         marker= Marker(
-            symbol="v",
+            symbol="+",
             cx=cell.cx,
             cy=cell.cy,
             width=12,
