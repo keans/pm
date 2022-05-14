@@ -1,5 +1,8 @@
 # ToDo
 
+* make text placement with margin etc. via separate reusable class
+
+
 ## Next
 
 * vertical lines e.g. today

@@ -1,8 +1,9 @@
-from .position import Position
-from .size import Size
+from draw.base.listener import OnChangeDimensionListener
+from draw.base.position import Position
+from draw.base.size import Size
 
 
-class Dimension:
+class Dimension(OnChangeDimensionListener):
     """
     dimension (x, y, width, height)
     """
@@ -13,8 +14,40 @@ class Dimension:
         width: int,
         height: int
     ):
+        OnChangeDimensionListener.__init__(self)
         self.pos = Position(x, y)
         self.size = Size(width, height)
+
+        OnChangeDimensionListener.add_listener(self, self)
+        self.pos.add_listener(self)
+        self.size.add_listener(self)
+
+    def on_change_position(self, position: Position):
+        """
+        forward on change position event to dimension change event
+
+        :param size: position
+        :type size: Position
+        """
+        OnChangeDimensionListener.notify(self, dimension=self)
+
+    def on_change_size(self, size: Size):
+        """
+        forward on change size event to dimension change event
+
+        :param size: size
+        :type size: Size
+        """
+        OnChangeDimensionListener.notify(self, dimension=self)
+
+    def on_change_dimension(self, dimension: "Dimension"):
+        """
+        override this method in a subclass to obtain dimension changes
+
+        :param dimension: dimension
+        :type dimension: Dimension
+        """
+        assert issubclass(dimension.__class__, Dimension)
 
     @property
     def tuple(self) -> tuple:
@@ -45,7 +78,6 @@ class Dimension:
         :rtype: int
         """
         return self.pos.y
-
 
     @property
     def xy(self) -> tuple:
@@ -125,7 +157,7 @@ class Dimension:
         assert isinstance(value, Position)
 
         self._pos = value
-        self.on_dimension_changed(self)
+        OnChangeDimensionListener.notify(self, dimension=self)
 
     @property
     def size(self) -> Size:
@@ -145,7 +177,7 @@ class Dimension:
         assert isinstance(value, Size)
 
         self._size = value
-        self.on_dimension_changed(self)
+        OnChangeDimensionListener.notify(self, dimension=self)
 
     def set_xy(self, x: int, y: int):
         """
@@ -156,7 +188,7 @@ class Dimension:
         :param y: y
         :type y: int
         """
-        self.pos.set_xy(x,y)
+        self.pos.set_xy(x, y)
 
     def set(self, dim: "Dimension"):
         """
@@ -243,15 +275,6 @@ class Dimension:
         assert isinstance(value, int)
 
         self.size.height = value
-
-    def on_dimension_changed(self, dim: "Dimension"):
-        """
-        override this method in a subclass to obtain dimension changes
-
-        :param pos: new dimension
-        :type pos: Dimension
-        """
-        pass
 
     def __repr__(self) -> str:
         """

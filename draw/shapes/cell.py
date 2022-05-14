@@ -5,13 +5,12 @@ from svgwrite.container import Group
 #    DEFAULT_BORDER_STYLE, BorderStyle, Margin, Padding, StrokeStyle, TextStyle
 from draw.base import Margin, Padding, Dimension
 from draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
-from draw.shapes import Box, Text
+from draw.shapes import Box, Label
 
 
 # default cell dimensions
 DEFAULT_CELL_WIDTH = 25
 DEFAULT_CELL_HEIGHT = 25
-#DEFAULT_CELL_STROKE_STYLE = StrokeStyle("gray", 1, "round", "round", None)
 DEFAULT_CELL_FILL = "white"
 
 
@@ -28,8 +27,6 @@ class Cell(Box):
         height: int,
         text: str = "",
         fill: str = DEFAULT_CELL_FILL,
-        # border_style: BorderStyle = DEFAULT_BORDER_STYLE,
-        # text_style: TextStyle = DEFAULT_TEXT_STYLE,
         text_anchor: str = "middle",
         text_alignment_baseline: str = "middle",
         margin: Margin = DEFAULT_MARGIN,
@@ -43,50 +40,31 @@ class Cell(Box):
             width=width,
             height=height,
             fill=fill,
-            # border_style=border_style,
             margin=margin,
             padding=padding,
             class_=class_
         )
 
         # prepare text
-        self.text = Text(
+        self.label = Label(
             x=0,
             y=0,
+            width=width,
+            height=height,
             text=text,
             text_anchor=text_anchor,
             text_dominant_baseline=text_alignment_baseline,
             class_=class_
         )
 
-    def set_xy(self, x: int, y: int):
+    def on_change_dimension(self, dimension: Dimension):
         """
-        set cell position
+        on dimension change adapt text
+
+        :param pos: new dimension
+        :type pos: Dimension
         """
-        Box.set_xy(self, x, y)
-
-        # align horizontal text
-        if self.text.text_anchor == "start":
-            text_x = self.x1  + self.padding.left
-
-        elif self.text.text_anchor == "end":
-            text_x = self.x2 - self.padding.right
-
-        elif self.text.text_anchor == "middle":
-            text_x = self.cx
-
-        # align vertical text
-        if self.text.text_dominant_baseline == "hanging":
-            text_y = self.y1 + self.padding.top
-
-        elif self.text.text_dominant_baseline == "auto":
-            text_y = self.y2 -  self.padding.bottom
-
-        elif self.text.text_dominant_baseline == "middle":
-            text_y = self.cy
-
-        # set text position
-        self.text.set_xy(text_x, text_y)
+        self.label.set(dimension)
 
     def set_fill(self, fill):
         self.fill = fill
@@ -108,8 +86,8 @@ class Cell(Box):
         Box.draw(self, dwg, grp)
 
         # draw text on top, if set
-        if self.text.text != "":
-            self.text.draw(dwg, grp)
+        if self.label.text != "":
+            self.label.draw(dwg, grp)
 
         return grp
 
@@ -122,5 +100,5 @@ class Cell(Box):
         """
         return (
             f"<Cell(x1={self.x1}, y1={self.y1}, "
-            f"x2={self.x2}, y2={self.y2}, text='{self.text}')>"
+            f"x2={self.x2}, y2={self.y2}, text='{self.label.text}')>"
         )

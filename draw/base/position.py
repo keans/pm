@@ -1,6 +1,7 @@
+from draw.base.listener import OnChangePositionListener
 
 
-class Position:
+class Position(OnChangePositionListener):
     """
     position (x, y)
     """
@@ -9,6 +10,12 @@ class Position:
         x: int,
         y: int
     ):
+        self._x = 0
+        self._y = 0
+
+        OnChangePositionListener.__init__(self)
+        OnChangePositionListener.add_listener(self, self)
+
         self.set_xy(x, y)
 
     @property
@@ -42,7 +49,7 @@ class Position:
         assert isinstance(value, int)
 
         self._x = value
-        self.on_position_changed(self)
+        OnChangePositionListener.notify(self, position=self)
 
     @property
     def y(self) -> int:
@@ -65,7 +72,7 @@ class Position:
         assert isinstance(value, int)
 
         self._y = value
-        self.on_position_changed(self)
+        OnChangePositionListener.notify(self, position=self)
 
     def set_xy(self, x: int, y: int):
         """
@@ -91,14 +98,14 @@ class Position:
         self.x = pos.x
         self.y = pos.y
 
-    def on_position_changed(self, pos: "Position"):
+    def on_change_position(self, position: "Position"):
         """
         override this method in a subclass to obtain position changes
 
         :param pos: new position
         :type pos: Position
         """
-        pass
+        assert issubclass(position.__class__, Position)
 
     def __repr__(self) -> str:
         """

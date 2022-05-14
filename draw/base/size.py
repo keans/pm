@@ -1,6 +1,7 @@
+from draw.base.listener import OnChangeSizeListener
 
 
-class Size:
+class Size(OnChangeSizeListener):
     """
     size (width, height)
     """
@@ -9,7 +10,14 @@ class Size:
         width: int,
         height: int
     ):
+        self._width = 0
+        self._height = 0
+
+        OnChangeSizeListener.__init__(self)
+        OnChangeSizeListener.add_listener(self, self)
+
         self.set_wh(width=width, height=height)
+
 
     @property
     def tuple(self) -> tuple:
@@ -42,7 +50,7 @@ class Size:
         assert isinstance(value, int)
 
         self._width = value
-        self.on_size_changed(self)
+        OnChangeSizeListener.notify(self, size=self)
 
     @property
     def height(self) -> int:
@@ -65,7 +73,7 @@ class Size:
         assert isinstance(value, int)
 
         self._height = value
-        self.on_size_changed(self)
+        OnChangeSizeListener.notify(self, size=self)
 
     def set_wh(
         self,
@@ -95,14 +103,14 @@ class Size:
         self.width = size.width
         self.height = size.height
 
-    def on_size_changed(self, size: "Size"):
+    def on_change_size(self, size: "Size"):
         """
         override this method in a subclass to obtain size changes
 
         :param pos: new size
         :type pos: Size
         """
-        pass
+        assert issubclass(size.__class__, Size)
 
     def __repr__(self) -> str:
         """

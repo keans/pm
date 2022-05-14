@@ -35,7 +35,7 @@ class Text(Position):
         :return: group with drawn items
         :rtype: Group
         """
-        grp = grp or dwg
+        grp = grp or dwg.g()
 
         grp.add(
             dwg.text(
