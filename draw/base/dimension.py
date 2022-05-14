@@ -276,6 +276,17 @@ class Dimension(OnChangeDimensionListener):
 
         self.size.height = value
 
+    def set_wh(self, width: int, height: int):
+        """
+        set width and height at the same time
+
+        :param width: w
+        :type width: int
+        :param height: h
+        :type height: int
+        """
+        self.size.set_wh(width=width, height=height)
+
     def __repr__(self) -> str:
         """
         returns the string reprentation of the dimension

@@ -2,7 +2,7 @@ from svgwrite import Drawing
 from svgwrite.container import Group
 
 from draw.base import Position, Margin
-from draw.shapes import Bar, PathWithArrow, Marker, Line
+from draw.shapes import Bar, PathWithArrow, Marker, LineWithMarker
 from draw.widgets.grid import Grid
 
 
@@ -111,11 +111,12 @@ class GridWithBars(Grid):
         # TODO: combine line + marker + text in new vertical line event
         #
         #
-        event = Line(
+        event = LineWithMarker(
             x1=start_cell.cx,
             y1=start_cell.pos.y,
             x2=start_cell.cx,
             y2=end_cell.pos.y + 50,
+            text="foo",
             class_="defaultevent"
         )
         self.events.append(event)

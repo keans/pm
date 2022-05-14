@@ -2,10 +2,10 @@ from svgwrite import Drawing
 from svgwrite.container import Group
 
 from draw.base import Dimension
-from draw.shapes import Label
+from draw.shapes import Line, Label
 
 
-class LineWithMarker(Dimension):
+class LineWithMarker(Line):
     """
     line with marker at the end
     """
@@ -17,50 +17,36 @@ class LineWithMarker(Dimension):
         y2: int,
         text: str = "",
         text_anchor: str = "middle",
-        text_alignment_baseline: str = "middle",
+        text_alignment_baseline: str = "auto",
+        text_y_offset = 20,
         class_: str = "linewithmarker"
     ):
-        Dimension.__init__(self, x1, y1, x2 - x1, y2 - y1)
+        Line.__init__(self, x1, y1, x1, y2)
 
         # prepare text
-        self.text = Label(
+        self.label = Label(
             x=0,
             y=0,
+            width=0,
+            height=0,
             text=text,
             text_anchor=text_anchor,
             text_dominant_baseline=text_alignment_baseline,
             class_=class_
         )
+        self.notify(dimension=self)
 
         self.class_ = class_
 
-    def set_xy(self, x: int, y: int):
+    def on_change_dimension(self, dimension: Dimension):
         """
-        set line position
+        on dimension change adapt text
+
+        :param pos: new dimension
+        :type pos: Dimension
         """
-
-        # align horizontal text
-        if self.text.text_anchor == "start":
-            text_x = self.x1  + self.padding.left
-
-        elif self.text.text_anchor == "end":
-            text_x = self.x2 - self.padding.right
-
-        elif self.text.text_anchor == "middle":
-            text_x = self.cx
-
-        # align vertical text
-        if self.text.text_dominant_baseline == "hanging":
-            text_y = self.y1 + self.padding.top
-
-        elif self.text.text_dominant_baseline == "auto":
-            text_y = self.y2 -  self.padding.bottom
-
-        elif self.text.text_dominant_baseline == "middle":
-            text_y = self.cy
-
-        # set text position
-        self.text.set_xy(text_x, text_y)
+        self.label.set_xy(dimension.x, dimension.y)
+        self.label.set_wh(dimension.width, dimension.height + 25)
 
     def draw(self, dwg: Drawing, grp: Group = None) -> Group:
         """
@@ -73,9 +59,14 @@ class LineWithMarker(Dimension):
         :return: group with drawn items
         :rtype: Group
         """
-        grp = grp or dwg
+        grp = grp or dwg.g()
 
-        # grp.add(path)
+        # draw line
+        Line.draw(self, dwg, grp)
+
+        # draw text
+        if self.label.text != "":
+            self.label.draw(dwg, grp)
 
         return grp
 
