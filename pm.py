@@ -7,10 +7,9 @@ from pathlib import Path
 import svgwrite
 import click
 
-from draw.widgets.grid import GridWithBars, GridRow
-from draw.widgets.gantt.gantt import Gantt
+from pm.draw.widgets.gantt.gantt import Gantt
 
-from models import Project
+from pm.models import Project
 
 
 # prepare logger
@@ -18,8 +17,11 @@ log = logging.getLogger(__file__)
 
 
 @click.group()
-@click.option("--debug/--no-debug", default=False)
-def cli(debug):
+@click.option(
+    "--debug/--no-debug",
+    default=False,
+)
+def cli(debug: bool):
     if debug is True:
         # activate DEBUG output
         logging.basicConfig(level=logging.DEBUG)
@@ -27,7 +29,7 @@ def cli(debug):
 
 @cli.command()
 @click.argument("filename")
-def gantt(filename):
+def gantt(filename: str):
     """
     create gantt chart from given project filename
     """
@@ -42,7 +44,7 @@ def gantt(filename):
     # TODO: make configurable via parameter?!
     dwg.add_stylesheet("css/default.css", "default")
 
-    #g = Gantt(100, 100, project=p)
+    # g = Gantt(100, 100, project=p)
     g = Gantt(100, 100, p)
 
     # draw gantt

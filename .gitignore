@@ -1,11 +1,8 @@
 .DS_Store
-.vscode
-.envrc
 *.pyc
 *.svg
 *.swp
 *.bak
 *.tmp
 *.yaml
-.direnv/
-env/
+.vscode/

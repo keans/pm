@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "pm"
+version = "0.0.1"
+description = "Project manager that can create Gantt diagrams."
+authors = ["Ansgar Kellner <keans@gmx.de>"]
+license = "MIT"
+readme = "README.rst"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pyyaml = "^6.0.1"
+svgwrite = "^1.4.3"
+cerberus = "^1.3.5"
+python-dateutil = "^2.9.0.post0"
+pytimeparse = "^1.1.8"
+click = "^8.1.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
