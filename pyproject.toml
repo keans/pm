@@ -16,6 +16,11 @@ pytimeparse = "^1.1.8"
 click = "^8.1.7"
 
 
+[tool.poetry.group.dev.dependencies]
+black = "^24.3.0"
+flake8 = "^7.0.0"
+jedi = "^0.19.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

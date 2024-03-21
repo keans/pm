@@ -13,8 +13,7 @@ path {
 }
 
 text.defaultcell {
-    font-family: sans-serif;
-    fill: "red";
+    font-family: "Arial";
     margin-left: 20px;
 }
 
@@ -118,6 +117,7 @@ line.defaultcell.header.day.bottom, line.defaultcell.header.day.right {
 
 text.defaultcell.day {
     font-weight: 600;
+    font-family: "Arial Narrow";
 }
 
 /* dashed lines between days */

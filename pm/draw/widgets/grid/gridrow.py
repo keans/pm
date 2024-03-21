@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Iterator
 
 from svgwrite import Drawing
 from svgwrite.container import Group
@@ -69,9 +69,15 @@ class GridRow(Position):
         :return: cell in row
         :rtype: Cell
         """
+        if col >= len(self.cells):
+            # invalid column
+            raise ValueError(
+                f"Invalid column {col} in {self}! Abort."
+            )
+        
         return self.cells[col]
 
-    def __next__(self) -> Cell:
+    def __next__(self) -> Iterator[Cell]:
         """
         return next cell
 

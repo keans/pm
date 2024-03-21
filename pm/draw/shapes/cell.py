@@ -4,14 +4,14 @@ from svgwrite import Drawing
 from svgwrite.container import Group
 
 from pm.draw.base import Margin, Padding, Dimension
-from pm.draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
+from pm.draw.base.consts import (
+    DEFAULT_MARGIN,
+    DEFAULT_PADDING,
+    DEFAULT_CELL_FILL,
+    DEFAULT_CELL_HEIGHT,
+    DEFAULT_CELL_WIDTH,
+)
 from pm.draw.shapes import Box, Label
-
-
-# default cell dimensions
-DEFAULT_CELL_WIDTH = 25
-DEFAULT_CELL_HEIGHT = 25
-DEFAULT_CELL_FILL = "white"
 
 
 class Cell(Box):

@@ -26,7 +26,10 @@ class Gantt(GridWithBars):
         self.project = project
 
         # prepare timetabble
-        self.timetable = Timetable(project.start_date, project.end_date)
+        self.timetable = Timetable(
+            start_date=project.start_date,
+            end_date=project.end_date,
+        )
 
         # add header based on hierarchy (year, quarter, month etc.)
         self.prepare_top_header()
@@ -72,14 +75,17 @@ class Gantt(GridWithBars):
         """
         for dt in self.timetable.days:
             r.add_cell(
-                self.default_cell_width, class_=self._cell_format_class(dt[0])
+                self.default_cell_width,
+                class_=self._cell_format_class(
+                    dt=dt[0],
+                ),
             )
 
     def prepare_top_header(self):
         """
         prepare the top header
         """
-        for s in self.timetable.hierarchy():
+        for s in self.timetable.hierarchy:
             r = GridRow()
 
             # add empty column for descriptions in the following rows
@@ -92,7 +98,10 @@ class Gantt(GridWithBars):
                 r.add_cell(
                     cell_width=self.default_cell_width * len(items),
                     text=items[0].default,
-                    class_=self._cell_format_class(items[0], is_header=True),
+                    class_=self._cell_format_class(
+                        dt=items[0],
+                        is_header=True,
+                    ),
                 )
 
             self.add_row(r)
@@ -133,13 +142,13 @@ class Gantt(GridWithBars):
                 self.add_row(r)
 
                 pos = Position(
-                    x=self.timetable.hierarchy_count() + i,
+                    x=self.timetable.hierarchy_count + i,
                     y=self.timetable.get_pos(t.start_date),
                 )
 
                 # store task's position for dependency arrows
                 cellpos[t.name] = Position(
-                    x=self.timetable.hierarchy_count() + i,
+                    x=self.timetable.hierarchy_count + i,
                     y=self.timetable.get_pos(t.start_date) + t.duration.days,
                 )
 
@@ -153,7 +162,7 @@ class Gantt(GridWithBars):
                 # add milestones
                 for m in t.milestones:
                     pos = Position(
-                        x=self.timetable.hierarchy_count() + i,
+                        x=self.timetable.hierarchy_count + i,
                         y=self.timetable.get_pos(m.date) + 1,
                     )
                     self.add_milestone(pos, m.name)
@@ -181,9 +190,9 @@ class Gantt(GridWithBars):
         for event in self.project.events:
             pos = Position(
                 y=self.timetable.get_pos(event.date),
-                x=self.timetable.hierarchy_count(),
+                x=self.timetable.hierarchy_count,
             )
-            self.add_event(pos, self.timetable.hierarchy_count())
+            self.add_event(pos, self.timetable.hierarchy_count)
 
 
 # TODO: USE HIERARCHY COUNT TO GET CORRECT LENGTH
