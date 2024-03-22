@@ -1,10 +1,11 @@
-from datetime import datetime
-import itertools
-from typing import Optional
+from datetime import datetime, timedelta
+from typing import Tuple
+import bisect
 
-from dateutil.rrule import rrule, DAILY
+from dateutil.rrule import rrule, DAILY, WEEKLY, MONTHLY, YEARLY
 
 from pm.models.timetableitem import TimetableItem
+from pm.models.timetablelevel import TimetableLevel
 from pm.models.types import DateType
 
 
@@ -18,20 +19,20 @@ DEFAULT_WEEK_SHORT_FMT = "%V"
 DEFAULT_DAY_FMT = "%d"
 
 
-# show all in hierarchy
-FULL_FMT = {
-    "year": DEFAULT_YEAR_FMT,
-    "quarter": DEFAULT_QUARTER_FMT,
-    "month": DEFAULT_MONTH_FMT,
-    "week": DEFAULT_WEEK_FMT,
-    "day": DEFAULT_DAY_FMT,
+# show year, quarter, month, week and day
+YEAR_QUARTER_MONTH_WEEK_DAY_FMT = {
+    DateType.YEAR: DEFAULT_YEAR_FMT,
+    DateType.QUARTER: DEFAULT_QUARTER_FMT,
+    DateType.MONTH: DEFAULT_MONTH_FMT,
+    DateType.WEEK: DEFAULT_WEEK_FMT,
+    DateType.DAY: DEFAULT_DAY_FMT,
 }
 
-# show all in hierarchy
+# show year, month and week
 YEAR_MONTH_WEEK_FMT = {
-    "year": DEFAULT_YEAR_FMT,
-    "month": DEFAULT_MONTH_SHORT_FMT,
-    "week": DEFAULT_WEEK_SHORT_FMT,
+    DateType.YEAR: DEFAULT_YEAR_FMT,
+    DateType.MONTH: DEFAULT_MONTH_SHORT_FMT,
+    DateType.WEEK: DEFAULT_WEEK_SHORT_FMT,
 }
 
 
@@ -76,113 +77,73 @@ class Timetable:
     def _get(
         self,
         dt_type: DateType,
-    ) -> list:
+    ) -> TimetableLevel:
         """
-        returns a list of TimeTableItem between start and end date
+        returns timetable level of the date type including
+        all timetable items between start and end date
 
-        :param dt_type: _des
+        :param dt_type: date type
         :type dt_type: DateType
-        :return: _description_
-        :rtype: list
+        :return: timetable level
+        :rtype: TimetableLevel
         """
-        # get all timetable items between start and end date
-        tt_items = [
+        # based on lowest in hierachy get the frequency
+        # notice that QUARTER is not existing for rrule
+        # thus cannot be used as lowest level
+        freq = {
+            DateType.DAY: DAILY,
+            DateType.WEEK: WEEKLY,
+            DateType.MONTH: MONTHLY,
+            DateType.YEAR: YEARLY,
+        }[self.hierarchy[-1]]
+
+        # get all timetable items based on rrule
+        items = [
             TimetableItem(
                 dt_type=dt_type,
                 dt=dt,
-                formats=self.formats,
+                format=self.formats[dt_type],
             )
             for dt in rrule(
-                freq=DAILY,
+                freq=freq,
                 dtstart=self.start_date,
                 until=self.end_date,
             )
         ]
 
-        # group them by the given date type
+        return TimetableLevel(dt_type=dt_type, items=items)
+
+    @property
+    def items_per_hierarchy(self) -> list:
+        """
+        return list of timetable levels based on hierachy
+
+        :return: list of timetable levels based on hierachy
+        :rtype: list
+        """
         return [
-            list(group)
-            for _, group in itertools.groupby(
-                tt_items,
-                key=lambda x: x.default,
-            )
+            self._get(level)
+            for level in DateType
+            if level in self.formats
         ]
 
     @property
-    def years(self) -> list:
-        """
-        list of years
-
-        :return: list of years
-        :rtype: list
-        """
-        return self._get(DateType.YEAR)
-
-    @property
-    def quarters(self) -> list:
-        """
-        list of quarters
-
-        :return: list of quarters
-        :rtype: list
-        """
-        return self._get(DateType.QUARTER)
-
-    @property
-    def months(self) -> list:
-        """
-        list of months
-
-        :return: list of months
-        :rtype: list
-        """
-        return self._get(DateType.MONTH)
-
-    @property
-    def weeks(self) -> list:
-        """
-        list of weeks
-
-        :return: list of weeks
-        :rtype: list
-        """
-        return self._get(DateType.WEEK)
-
-    @property
-    def days(self) -> list:
-        """
-        list of days
-
-        :return: list of days
-        :rtype: list
-        """
-        return self._get(DateType.DAY)
-   
-    @property
     def hierarchy(self) -> list[str]:
         """
-        hierarchy of different date resolutions in depth
+        hierarchy of different DateType
 
         :return: list of strings each from hierarchy
         :rtype: list[str]
         """
         return [
-            getattr(self, f"{level.value}s")
-            for level in DateType
-            if level.value in self.formats
+            level for level in DateType
+            if level in self.formats
         ]
-    
-    @property
-    def hierarchy_count(self) -> int:
-        """
-        number of levels in the hierarchy
 
-        :return: number of levels in hierarchy
-        :rtype: int
-        """
-        return len(self.hierarchy)
-
-    def get_pos(self, dt: datetime,) -> int:
+    def get_pos(
+        self,
+        dt: datetime,
+    ) -> int:
         """
         returns the position of the given date
         on the lowest hierarchy
@@ -192,11 +153,46 @@ class Timetable:
         :return: position of the given datetime
         :rtype: int
         """
-        TODO: ONLY ON LOWEST LEVEL!!!
-        return [
-            d.dt 
-            for d in itertools.chain(*self.days)
-        ].index(dt)
+        # get all dates of lowest level in hierarchy
+        dates = [item.dt for item in self.items_per_hierarchy[-1].items]
+
+        return bisect.bisect_left(dates, dt)
+
+    def get_from_and_length_pos(
+        self,
+        from_date: datetime,
+        to_date: datetime,
+        col_offset: int,
+    ) -> Tuple[int, int]:
+        """
+        returns the position of the from date and
+        the length of the to date
+
+        :param from_date: from date
+        :type from_date: datetime
+        :param to_date: to date
+        :type to_date: datetime
+        :param col_offset: offset the column is shifted
+        :type col_offset: int
+        :return: tuple with position of from data and length
+        :rtype: Tuple[int, int]
+        """
+        print(
+            to_date-from_date,
+            "pos", self.get_pos(from_date) + col_offset,
+            "len", self.get_pos(to_date) - self.get_pos(from_date)
+        )
+
+        return (
+            self.get_pos(from_date) + col_offset,
+            self.get_pos(to_date) - self.get_pos(from_date)
+        )
 
     def __repr__(self) -> str:
+        """
+        returns the string representation of the hierarchy
+
+        :return: string representation of the hierarchy
+        :rtype: str
+        """
         return str(self.hierarchy)

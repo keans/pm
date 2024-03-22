@@ -33,6 +33,13 @@ class GridWithBars(Grid):
     ):
         """
         add a bar to the grid
+
+        :param position: position
+        :type position: Position
+        :param length: length of the bar
+        :type length: int
+        :param fill: fill color, defaults to "black"
+        :type fill: str, optional
         """
         start_cell = self.get_cell(*position.tuple)
         end_cell = self.get_cell(position.x, position.y + length)
@@ -97,13 +104,22 @@ class GridWithBars(Grid):
         self,
         position: Position,
         hierarchy_count: int,
+        text: str
     ):
         """
         add an event to the grid
+
+        :param position: position
+        :type position: Position
+        :param hierarchy_count: number of hierarchies
+        :type hierarchy_count: int
+        :param text: text
+        :type text: str
         """
         start_cell = self.get_cell(*position.tuple)
         end_cell = self.get_cell(
-            position.x + len(self.rows) - hierarchy_count - 1, position.y
+            position.x + len(self.rows) - hierarchy_count - 1,
+            position.y,
         )
 
         #
@@ -115,7 +131,7 @@ class GridWithBars(Grid):
             y1=start_cell.pos.y,
             x2=start_cell.cx,
             y2=end_cell.pos.y + 50,
-            text="foo",
+            text=text,
             class_="defaultevent",
         )
         self.events.append(event)

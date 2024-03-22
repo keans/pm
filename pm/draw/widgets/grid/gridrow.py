@@ -4,8 +4,12 @@ from svgwrite import Drawing
 from svgwrite.container import Group
 
 from pm.draw.base import Position, Margin, Padding
-from pm.draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
-from pm.draw.shapes.cell import DEFAULT_CELL_HEIGHT, DEFAULT_CELL_WIDTH
+from pm.draw.base.consts import (
+    DEFAULT_MARGIN,
+    DEFAULT_PADDING,
+    DEFAULT_CELL_HEIGHT,
+    DEFAULT_CELL_WIDTH,
+)
 from pm.draw.shapes import Cell
 
 
@@ -71,10 +75,8 @@ class GridRow(Position):
         """
         if col >= len(self.cells):
             # invalid column
-            raise ValueError(
-                f"Invalid column {col} in {self}! Abort."
-            )
-        
+            raise ValueError(f"Invalid column {col} in {self}! Abort.")
+
         return self.cells[col]
 
     def __next__(self) -> Iterator[Cell]:
@@ -120,9 +122,27 @@ class GridRow(Position):
         margin: Margin = DEFAULT_MARGIN,
         padding: Padding = DEFAULT_PADDING,
         class_: str = "defaultcell",
-    ):
+    ) -> Cell:
         """
         add a cell to a row
+
+        :param cell_width: width of the cell, defaults to DEFAULT_CELL_WIDTH
+        :type cell_width: int, optional
+        :param text: text for cell, defaults to ""
+        :type text: str, optional
+        :param text_anchor: horizontal alignment, defaults to "middle"
+        :type text_anchor: str, optional
+        :param text_alignment_baseline: vertical alignment,
+                                        defaults to "middle"
+        :type text_alignment_baseline: str, optional
+        :param margin: margin, defaults to DEFAULT_MARGIN
+        :type margin: Margin, optional
+        :param padding: padding, defaults to DEFAULT_PADDING
+        :type padding: Padding, optional
+        :param class_: CSS class, defaults to "defaultcell"
+        :type class_: str, optional
+        :return: created cell
+        :rtype: Cell
         """
         cell = Cell(
             x=0,
@@ -152,6 +172,15 @@ class GridRow(Position):
     ):
         """
         add multiple columns of same style to the row
+
+        :param col_count: number of columns to create
+        :type col_count: int
+        :param cell_width: width of the cells, defaults to DEFAULT_CELL_WIDTH
+        :type cell_width: int, optional
+        :param text: text for the cells, defaults to ""
+        :type text: str, optional
+        :param class_: CSS class, defaults to "defaultcell"
+        :type class_: str, optional
         """
         for _ in range(col_count):
             self.add_cell(cell_width=cell_width, text=text, class_=class_)

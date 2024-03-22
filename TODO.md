@@ -5,6 +5,9 @@
 
 ## Next
 
+* FIGURE OUT WHY WEEK VIEW IS BROKEN BUT DAYS WORKS??!
+
+
 * vertical lines, e.g., today
     * add marker
     * add text
@@ -16,12 +19,13 @@
 
 * mark areas such as holidays
 
-* option to integrate css directly into the svg file?!
 
 * Project
     * split load function into subfunctions
 
+* option to integrate css directly into the svg file?!
+
+
 ## Later
 
-* (add dependencies aka arrows)
 * (add percentage completed?!)

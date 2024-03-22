@@ -1,36 +1,36 @@
 name: example
-start_date: "2022-01-03"
-end_date: "2022-05-01"
+start_date: "2023-01-03"
+end_date: "2023-05-01"
 responsible: John Doe
 events:
   - name: today
-    date: "2022-03-14"
+    date: "2023-03-14"
 workpackages:
   - name: WP1
     responsible: John Doe
     tasks:
       - name: My Task
-        start_date: "2022-03-02"
+        start_date: "2023-03-02"
         duration: 1w
         milestones:
           - name: MS1
             responsible: John Doe
-            date: "2022-03-07"
+            date: "2023-03-08"
       - name: My Task2
-        start_date: "2022-03-11"
-        duration: 1w
+        start_date: "2023-03-11"
+        duration: 3d
         depends_on: My Task
       - name: My Task3
-        start_date: "2022-03-12"
+        start_date: "2023-03-12"
         duration: 1w
         milestones:
           - name: MS2
             responsible: John Doe
-            date: "2022-03-04"
+            date: "2023-03-04"
           - name: MS3
             responsible: John Doe
-            date: "2022-03-17"
+            date: "2023-03-18"
       - name: My Task4
-        start_date: "2022-03-18"
-        duration: 1w
+        start_date: "2023-03-20"
+        duration: 1d
         depends_on: My Task3

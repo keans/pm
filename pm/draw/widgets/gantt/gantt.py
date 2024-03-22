@@ -1,9 +1,9 @@
 from pm.draw.base import Position, Padding
-from pm.draw.shapes.cell import DEFAULT_CELL_WIDTH
+from pm.draw.base.consts import DEFAULT_CELL_WIDTH
 from pm.draw.widgets.grid import GridWithBars, GridRow
 from pm.models.project import Project
 from pm.models.types import DateType
-from pm.utils.timetable import Timetable
+from pm.utils.timetable import Timetable, YEAR_QUARTER_MONTH_WEEK_DAY_FMT
 
 
 class Gantt(GridWithBars):
@@ -18,6 +18,7 @@ class Gantt(GridWithBars):
         project: Project,
         default_cell_width: int = DEFAULT_CELL_WIDTH,
         description_width: int = 200,
+        formats=YEAR_QUARTER_MONTH_WEEK_DAY_FMT,
     ):
         GridWithBars.__init__(self, x=x, y=y)
 
@@ -29,6 +30,7 @@ class Gantt(GridWithBars):
         self.timetable = Timetable(
             start_date=project.start_date,
             end_date=project.end_date,
+            formats=formats,
         )
 
         # add header based on hierarchy (year, quarter, month etc.)
@@ -58,26 +60,26 @@ class Gantt(GridWithBars):
         if is_header is True:
             class_ += " header"
 
-        if (dt.dt_type == DateType.DAY) and dt.is_weekend():
+        if (dt.dt_type == DateType.DAY) and dt.is_weekend:
             class_ += " weekend"
 
         return class_
 
-    def add_days(
+    def add_empty_cells(
         self,
         r: GridRow,
     ):
         """
-        add days to row
+        add empty cells to row
 
         :param r: row
         :type r: Row
         """
-        for dt in self.timetable.days:
+        for tti in self.timetable.items_per_hierarchy[-1].items:
             r.add_cell(
                 self.default_cell_width,
                 class_=self._cell_format_class(
-                    dt=dt[0],
+                    dt=tti,
                 ),
             )
 
@@ -85,7 +87,7 @@ class Gantt(GridWithBars):
         """
         prepare the top header
         """
-        for s in self.timetable.hierarchy:
+        for timetable_level in self.timetable.items_per_hierarchy:
             r = GridRow()
 
             # add empty column for descriptions in the following rows
@@ -94,12 +96,12 @@ class Gantt(GridWithBars):
             )
 
             # add items
-            for items in s:
+            for item, count in timetable_level.grouped_items:
                 r.add_cell(
-                    cell_width=self.default_cell_width * len(items),
-                    text=items[0].default,
+                    cell_width=self.default_cell_width * count,
+                    text=str(item),
                     class_=self._cell_format_class(
-                        dt=items[0],
+                        dt=item,
                         is_header=True,
                     ),
                 )
@@ -113,7 +115,7 @@ class Gantt(GridWithBars):
         cellpos = {}
         i = 0
         for wp in self.project.workpackages:
-            # add workpackage description
+            # -- workpackage description --
             r = GridRow()
             r.add_cell(
                 cell_width=self.description_width,
@@ -122,10 +124,11 @@ class Gantt(GridWithBars):
                 padding=Padding(top=2, right=2, bottom=2, left=10),
                 class_="defaultcell workpackage",
             )
-            self.add_days(r)
+            self.add_empty_cells(r)
             self.add_row(r)
             i += 1
 
+            # -- tasks --
             for t in wp.tasks:
                 r = GridRow()
 
@@ -138,31 +141,40 @@ class Gantt(GridWithBars):
                     padding=Padding(top=2, right=2, bottom=2, left=20),
                     class_="defaultcell task",
                 )
-                self.add_days(r)
+                self.add_empty_cells(r)
                 self.add_row(r)
 
-                pos = Position(
-                    x=self.timetable.hierarchy_count + i,
-                    y=self.timetable.get_pos(t.start_date),
+                # get start position and length
+                # use col_offset by 1 since first column has description
+                col, length = self.timetable.get_from_and_length_pos(
+                    from_date=t.start_date,
+                    to_date=t.end_date,
+                    col_offset=1
                 )
+
+                # current row
+                row = len(self.timetable.hierarchy) + i
+
+                # position in grid
+                # => please note that row=x and col=y due to nested
+                #    list access order
+                pos = Position(x=row, y=col)
 
                 # store task's position for dependency arrows
-                cellpos[t.name] = Position(
-                    x=self.timetable.hierarchy_count + i,
-                    y=self.timetable.get_pos(t.start_date) + t.duration.days,
-                )
+                cellpos[t.name] = Position(x=row, y=col + length)
 
+                # add bar
                 # TODO: add colors per package? to inheritance
                 self.add_bar(
                     position=pos,
-                    length=t.duration.days - 1,
+                    length=length - 1,
                     fill="lightblue",
                 )
 
                 # add milestones
                 for m in t.milestones:
                     pos = Position(
-                        x=self.timetable.hierarchy_count + i,
+                        x=row,
                         y=self.timetable.get_pos(m.date) + 1,
                     )
                     self.add_milestone(pos, m.name)
@@ -189,10 +201,11 @@ class Gantt(GridWithBars):
         # add vertical lines to the grid
         for event in self.project.events:
             pos = Position(
-                y=self.timetable.get_pos(event.date),
-                x=self.timetable.hierarchy_count,
+                y=self.timetable.get_pos(event.date) + 1,
+                x=len(self.timetable.hierarchy),
             )
-            self.add_event(pos, self.timetable.hierarchy_count)
-
-
-# TODO: USE HIERARCHY COUNT TO GET CORRECT LENGTH
+            self.add_event(
+                position=pos,
+                hierarchy_count=len(self.timetable.hierarchy),
+                text=event.name,
+            )
