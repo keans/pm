@@ -8,7 +8,8 @@ import svgwrite
 import click
 
 from pm.utils.timetable import (
-    YEAR_MONTH_WEEK_FMT, YEAR_QUARTER_MONTH_WEEK_DAY_FMT,
+    YEAR_MONTH_WEEK_FMT,
+    YEAR_QUARTER_MONTH_WEEK_DAY_FMT,
 )
 from pm.draw.widgets.gantt.gantt import Gantt
 
@@ -36,7 +37,7 @@ def cli(debug: bool):
     "--view",
     type=click.Choice(["day", "week"]),
     show_default=True,
-    default="day"
+    default="day",
 )
 def gantt(filename: str, view: str):
     """
@@ -56,8 +57,8 @@ def gantt(filename: str, view: str):
     # set format (hierarchy) for output
     formats = (
         YEAR_QUARTER_MONTH_WEEK_DAY_FMT
-        if view == "day" else
-        YEAR_MONTH_WEEK_FMT
+        if view == "day"
+        else YEAR_MONTH_WEEK_FMT
     )
 
     # draw gantt

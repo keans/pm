@@ -1,6 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Tuple
-import bisect
 
 from dateutil.rrule import rrule, DAILY, WEEKLY, MONTHLY, YEARLY
 
@@ -54,6 +53,25 @@ class Timetable:
         # ensure valid format entries
         self.formats = self._check_formats(formats)
 
+    @property
+    def freq(self) -> int:
+        """
+        get dateutil rrule frequency based on lowest level in hierachy, e.g.,
+        DAILY, WEEKLY, MONTHLY etc.
+
+        please notice that QUARTER is not existing for rrule
+        thus cannot be used as lowest level!
+
+        :return: rrule frequency
+        :rtype: int
+        """
+        return {
+            DateType.DAY: DAILY,
+            DateType.WEEK: WEEKLY,
+            DateType.MONTH: MONTHLY,
+            DateType.YEAR: YEARLY,
+        }[self.hierarchy[-1]]
+
     def _check_formats(self, formats: dict) -> dict:
         """
         check given format for valid entries
@@ -74,7 +92,7 @@ class Timetable:
 
         return formats
 
-    def _get(
+    def _get_timetable_level(
         self,
         dt_type: DateType,
     ) -> TimetableLevel:
@@ -87,16 +105,6 @@ class Timetable:
         :return: timetable level
         :rtype: TimetableLevel
         """
-        # based on lowest in hierachy get the frequency
-        # notice that QUARTER is not existing for rrule
-        # thus cannot be used as lowest level
-        freq = {
-            DateType.DAY: DAILY,
-            DateType.WEEK: WEEKLY,
-            DateType.MONTH: MONTHLY,
-            DateType.YEAR: YEARLY,
-        }[self.hierarchy[-1]]
-
         # get all timetable items based on rrule
         items = [
             TimetableItem(
@@ -105,7 +113,7 @@ class Timetable:
                 format=self.formats[dt_type],
             )
             for dt in rrule(
-                freq=freq,
+                freq=self.freq,
                 dtstart=self.start_date,
                 until=self.end_date,
             )
@@ -122,7 +130,7 @@ class Timetable:
         :rtype: list
         """
         return [
-            self._get(level)
+            self._get_timetable_level(level)
             for level in DateType
             if level in self.formats
         ]
@@ -135,10 +143,7 @@ class Timetable:
         :return: list of strings each from hierarchy
         :rtype: list[str]
         """
-        return [
-            level for level in DateType
-            if level in self.formats
-        ]
+        return [level for level in DateType if level in self.formats]
 
     def get_pos(
         self,
@@ -153,10 +158,11 @@ class Timetable:
         :return: position of the given datetime
         :rtype: int
         """
-        # get all dates of lowest level in hierarchy
-        dates = [item.dt for item in self.items_per_hierarchy[-1].items]
+        # get all formatted dates of lowest level in hierarchy
+        dates = [str(item) for item in self.items_per_hierarchy[-1].items]
 
-        return bisect.bisect_left(dates, dt)
+        # find given date in prepared list
+        return dates.index(dt.strftime(self.formats[self.hierarchy[-1]]))
 
     def get_from_and_length_pos(
         self,
@@ -177,16 +183,17 @@ class Timetable:
         :return: tuple with position of from data and length
         :rtype: Tuple[int, int]
         """
-        print(
-            to_date-from_date,
-            "pos", self.get_pos(from_date) + col_offset,
-            "len", self.get_pos(to_date) - self.get_pos(from_date)
-        )
+        # compute pos
+        pos = self.get_pos(from_date) + col_offset
 
-        return (
-            self.get_pos(from_date) + col_offset,
-            self.get_pos(to_date) - self.get_pos(from_date)
-        )
+        # get length between start and end date
+        items_len = self.get_pos(to_date) - self.get_pos(from_date)
+
+        if self.freq == DAILY:
+            # in case of daily
+            items_len -= 1
+
+        return (pos, items_len)
 
     def __repr__(self) -> str:
         """

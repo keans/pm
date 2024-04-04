@@ -17,6 +17,11 @@ text.defaultcell {
     margin-left: 20px;
 }
 
+text.defaultmarker {
+    font-family: "Arial";
+    font-size: 0.9em;
+}
+
 /* background rects */
 rect.defaultcell.header.year {
 }
@@ -128,6 +133,18 @@ line.defaultcell.day.left, line.defaultcell.day.right {
 
 /* solid line on first and last day of day grid as well as on last row*/
 line.day.firstcol.left, line.day.lastcol.right, line.lastrow.bottom {
+    stroke: black !important;
+    stroke-dasharray: 0;
+}
+
+/* dashed lines between days */
+line.defaultcell.week.left, line.defaultcell.week.right {
+    stroke: black;
+    stroke-dasharray: 2;
+}
+
+/* solid line on first and last day of day grid as well as on last row*/
+line.week.firstcol.left, line.week.lastcol.right, line.lastrow.bottom {
     stroke: black !important;
     stroke-dasharray: 0;
 }

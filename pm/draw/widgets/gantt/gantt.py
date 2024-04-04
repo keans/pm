@@ -147,9 +147,7 @@ class Gantt(GridWithBars):
                 # get start position and length
                 # use col_offset by 1 since first column has description
                 col, length = self.timetable.get_from_and_length_pos(
-                    from_date=t.start_date,
-                    to_date=t.end_date,
-                    col_offset=1
+                    from_date=t.start_date, to_date=t.end_date, col_offset=1
                 )
 
                 # current row
@@ -161,13 +159,13 @@ class Gantt(GridWithBars):
                 pos = Position(x=row, y=col)
 
                 # store task's position for dependency arrows
-                cellpos[t.name] = Position(x=row, y=col + length)
+                cellpos[t.name] = Position(x=row, y=col + length + 1)
 
                 # add bar
                 # TODO: add colors per package? to inheritance
                 self.add_bar(
                     position=pos,
-                    length=length - 1,
+                    length=length,
                     fill="lightblue",
                 )
 

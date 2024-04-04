@@ -100,12 +100,7 @@ class GridWithBars(Grid):
         )
         self.milestones.append(marker)
 
-    def add_event(
-        self,
-        position: Position,
-        hierarchy_count: int,
-        text: str
-    ):
+    def add_event(self, position: Position, hierarchy_count: int, text: str):
         """
         add an event to the grid
 

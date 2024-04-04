@@ -6,7 +6,7 @@ from svgwrite.shapes import Polygon, Circle, Rect
 from svgwrite.path import Path
 
 from pm.draw.base import Dimension
-from pm.draw.shapes import Text
+from pm.draw.shapes import Label
 
 
 class Marker(Dimension):
@@ -40,20 +40,6 @@ class Marker(Dimension):
         text_y_offset: int = 0,
         class_: str = "defaultmarker",
     ):
-        # store text offset -> used later during moving
-        self._text_x_offset = text_x_offset
-        self._text_y_offset = text_y_offset
-
-        # prepare text at (0, 0)
-        self.text = Text(
-            x=0,
-            y=0,
-            text=text,
-            text_anchor=text_anchor,
-            text_dominant_baseline=text_alignment_baseline,
-            class_=class_,
-        )
-
         Dimension.__init__(
             self,
             x=int(cx - width / 2),
@@ -62,9 +48,39 @@ class Marker(Dimension):
             height=height,
         )
 
+        # store text offset -> used later during moving
+        # self._text_x_offset = text_x_offset
+        # self._text_y_offset = text_y_offset
+
+        # prepare text
+        self.label = Label(
+            x=0,
+            y=0,
+            width=0,
+            height=0,
+            text=text,
+            text_anchor=text_anchor,
+            text_dominant_baseline=text_alignment_baseline,
+            class_=class_,
+        )
+        self.notify(dimension=self)
+
         self.symbol = symbol
         self.fill = fill
         self.class_ = class_
+
+    def on_change_dimension(
+        self,
+        dimension: Dimension,
+    ):
+        """
+        on dimension change adapt text
+
+        :param pos: new dimension
+        :type pos: Dimension
+        """
+        self.label.set_xy(dimension.x, dimension.y)
+        self.label.set_wh(dimension.width, dimension.height + 40)
 
     @property
     def symbol(self) -> str:
@@ -91,21 +107,6 @@ class Marker(Dimension):
         assert value in self.SUPPORTED_MARKERS
 
         self._symbol = value
-
-    def on_dimension_changed(
-        self,
-        dim: "Dimension",
-    ):
-        """
-        react to dimension changes
-
-        :param pos: new dimension
-        :type pos: Dimension
-        """
-        # adapt position of the text to marker's center position
-        self.text.set_xy(
-            dim.cx + self._text_x_offset, dim.cy + self._text_y_offset
-        )
 
     def _diamond(
         self,
@@ -331,9 +332,9 @@ class Marker(Dimension):
             # plus
             grp.add(self._plus(dwg))
 
-        # draw text on top, if set
-        if self.text.text != "":
-            self.text.draw(dwg, grp)
+        # draw text
+        if self.label.text != "":
+            self.label.draw(dwg, grp)
 
         return grp
 
