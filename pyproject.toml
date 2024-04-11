@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pm"
 version = "0.0.1"
-description = "Project manager that can create Gantt diagrams."
+description = "Project manager that can create Gantt diagrams as SVGs."
 authors = ["Ansgar Kellner <keans@gmx.de>"]
 license = "MIT"
 readme = "README.rst"

@@ -8,6 +8,8 @@ from pm.draw.base.consts import (
     DEFAULT_MARGIN,
     DEFAULT_PADDING,
     DEFAULT_CELL_FILL,
+    TextAnchor,
+    TextDominantBaseline,
 )
 from pm.draw.shapes import Box, Label
 
@@ -26,8 +28,10 @@ class Cell(Box):
         height: int,
         text: str = "",
         fill: str = DEFAULT_CELL_FILL,
-        text_anchor: str = "middle",
-        text_alignment_baseline: str = "middle",
+        text_anchor: TextAnchor = TextAnchor.MIDDLE,
+        text_alignment_baseline: TextDominantBaseline = (
+            TextDominantBaseline.CENTRAL
+        ),
         margin: Margin = DEFAULT_MARGIN,
         padding: Padding = DEFAULT_PADDING,
         class_: str = "defaultcell",
@@ -66,7 +70,13 @@ class Cell(Box):
         :param pos: new dimension
         :type pos: Dimension
         """
-        self.label.set(dimension)
+        self.label.set_xy(
+            x=dimension.x + self.padding.left, y=dimension.y + self.padding.top
+        )
+        self.label.set_wh(
+            width=dimension.width - self.padding.left - self.padding.right,
+            height=dimension.height - self.padding.top - self.padding.bottom,
+        )
 
     def set_fill(self, fill):
         self.fill = fill

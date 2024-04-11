@@ -4,6 +4,7 @@ from svgwrite import Drawing
 from svgwrite.container import Group
 
 from pm.draw.base import Position
+from pm.draw.base.consts import TextAnchor, TextDominantBaseline
 
 
 class Text(Position):
@@ -16,8 +17,10 @@ class Text(Position):
         x: int,
         y: int,
         text: str,
-        text_anchor: str = "middle",
-        text_dominant_baseline: str = "middle",
+        text_anchor: TextAnchor = TextAnchor.MIDDLE,
+        text_dominant_baseline: TextDominantBaseline = (
+            TextDominantBaseline.CENTRAL
+        ),
         class_: str = "default_text",
     ):
         Position.__init__(self, x, y)
@@ -48,8 +51,8 @@ class Text(Position):
             dwg.text(
                 text=self.text,
                 insert=(self.x, self.y),
-                text_anchor=self.text_anchor,
-                dominant_baseline=self.text_dominant_baseline,
+                text_anchor=self.text_anchor.value,
+                dominant_baseline=self.text_dominant_baseline.value,
                 class_=self.class_,
             )
         )

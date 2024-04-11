@@ -7,6 +7,7 @@ from svgwrite.path import Path
 
 from pm.draw.base import Dimension
 from pm.draw.shapes import Label
+from pm.draw.base.consts import TextAnchor, TextDominantBaseline
 
 
 class Marker(Dimension):
@@ -34,8 +35,10 @@ class Marker(Dimension):
         height: int = None,
         text: str = "",
         fill: str = "black",
-        text_anchor: str = "middle",
-        text_alignment_baseline: str = "middle",
+        text_anchor: TextAnchor = TextAnchor.MIDDLE,
+        text_alignment_baseline: TextDominantBaseline = (
+            TextDominantBaseline.CENTRAL
+        ),
         text_x_offset: int = 0,
         text_y_offset: int = 0,
         class_: str = "defaultmarker",

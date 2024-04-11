@@ -22,7 +22,11 @@ class Line(Dimension):
         Dimension.__init__(self, x1, y1, x2 - x1, y2 - y1)
         self.class_ = class_
 
-    def draw(self, dwg: Drawing, grp: Optional[Group] = None) -> Group:
+    def draw(
+        self,
+        dwg: Drawing,
+        grp: Optional[Group] = None,
+    ) -> Group:
         """
         draw line and return it as group
 

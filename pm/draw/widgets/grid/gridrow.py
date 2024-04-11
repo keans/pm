@@ -9,6 +9,8 @@ from pm.draw.base.consts import (
     DEFAULT_PADDING,
     DEFAULT_CELL_HEIGHT,
     DEFAULT_CELL_WIDTH,
+    TextAnchor,
+    TextDominantBaseline,
 )
 from pm.draw.shapes import Cell
 
@@ -117,8 +119,10 @@ class GridRow(Position):
         self,
         cell_width: int = DEFAULT_CELL_WIDTH,
         text: str = "",
-        text_anchor: str = "middle",
-        text_alignment_baseline: str = "middle",
+        text_anchor: TextAnchor = TextAnchor.MIDDLE,
+        text_alignment_baseline: TextDominantBaseline = (
+            TextDominantBaseline.CENTRAL
+        ),
         margin: Margin = DEFAULT_MARGIN,
         padding: Padding = DEFAULT_PADDING,
         class_: str = "defaultcell",
@@ -131,10 +135,10 @@ class GridRow(Position):
         :param text: text for cell, defaults to ""
         :type text: str, optional
         :param text_anchor: horizontal alignment, defaults to "middle"
-        :type text_anchor: str, optional
+        :type text_anchor: TextAnchor, optional
         :param text_alignment_baseline: vertical alignment,
                                         defaults to "middle"
-        :type text_alignment_baseline: str, optional
+        :type text_alignment_baseline: TextDominantBaseline, optional
         :param margin: margin, defaults to DEFAULT_MARGIN
         :type margin: Margin, optional
         :param padding: padding, defaults to DEFAULT_PADDING

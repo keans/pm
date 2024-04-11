@@ -4,6 +4,7 @@ from svgwrite import Drawing
 from svgwrite.container import Group
 
 from pm.draw.base import Dimension
+from pm.draw.base.consts import TextAnchor, TextDominantBaseline
 from pm.draw.shapes import Line, Label
 
 # NEXT: ADD MARKER TO LINE => BETTER SEPARATE LINE CLASS OR EXTEND LINE?!
@@ -21,8 +22,10 @@ class LineWithMarker(Line):
         x2: int,
         y2: int,
         text: str = "",
-        text_anchor: str = "middle",
-        text_alignment_baseline: str = "auto",
+        text_anchor: TextAnchor = TextAnchor.MIDDLE,
+        text_alignment_baseline: TextDominantBaseline = (
+            TextDominantBaseline.AUTO
+        ),
         text_y_offset: int = 20,
         class_: str = "linewithmarker",
     ):

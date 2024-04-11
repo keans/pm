@@ -1,5 +1,9 @@
 from pm.draw.base import Position, Padding
-from pm.draw.base.consts import DEFAULT_CELL_WIDTH
+from pm.draw.base.consts import (
+    DEFAULT_CELL_WIDTH,
+    TextAnchor,
+    TextDominantBaseline,
+)
 from pm.draw.widgets.grid import GridWithBars, GridRow
 from pm.models.project import Project
 from pm.models.types import DateType
@@ -120,8 +124,8 @@ class Gantt(GridWithBars):
             r.add_cell(
                 cell_width=self.description_width,
                 text=wp.name,
-                text_anchor="start",
-                padding=Padding(top=2, right=2, bottom=2, left=10),
+                text_anchor=TextAnchor.START,
+                padding=Padding(top=2, right=0, bottom=2, left=5),
                 class_="defaultcell workpackage",
             )
             self.add_empty_cells(r)
@@ -136,9 +140,9 @@ class Gantt(GridWithBars):
                 r.add_cell(
                     cell_width=self.description_width,
                     text=t.name,
-                    text_anchor="start",
-                    text_alignment_baseline="middle",
-                    padding=Padding(top=2, right=2, bottom=2, left=20),
+                    text_anchor=TextAnchor.START,
+                    text_alignment_baseline=TextDominantBaseline.CENTRAL,
+                    padding=Padding(top=2, right=2, bottom=2, left=10),
                     class_="defaultcell task",
                 )
                 self.add_empty_cells(r)

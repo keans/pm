@@ -4,7 +4,12 @@ from svgwrite import Drawing
 from svgwrite.container import Group
 
 from pm.draw.base import Margin, Padding, Dimension
-from pm.draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
+from pm.draw.base.consts import (
+    DEFAULT_MARGIN,
+    DEFAULT_PADDING,
+    TextAnchor,
+    TextDominantBaseline,
+)
 from pm.draw.shapes import Text
 
 
@@ -20,8 +25,10 @@ class Label(Dimension):
         width: int,
         height: int,
         text: str = "",
-        text_anchor: str = "middle",
-        text_dominant_baseline: str = "middle",
+        text_anchor: TextAnchor = TextAnchor.MIDDLE,
+        text_dominant_baseline: TextDominantBaseline = (
+            TextDominantBaseline.CENTRAL
+        ),
         margin: Margin = DEFAULT_MARGIN,
         padding: Padding = DEFAULT_PADDING,
         class_: str = "defaultlabel",
@@ -46,24 +53,43 @@ class Label(Dimension):
         update the text's position of the label
         """
         # align horizontal text
-        if self.text.text_anchor == "start":
+        if self.text.text_anchor == TextAnchor.START:
+            # start (left)
             text_x = self.x1 + self.padding.left
 
-        elif self.text.text_anchor == "end":
+        elif self.text.text_anchor == TextAnchor.END:
+            # end (right)
             text_x = self.x2 - self.padding.right
 
-        elif self.text.text_anchor == "middle":
+        elif self.text.text_anchor == TextAnchor.MIDDLE:
+            # middle (center)
             text_x = self.cx
 
+        else:
+            # invalid horizontal value
+            raise ValueError(
+                f"invalid text_anchor value '{self.text.text_anchor}'!"
+            )
+
         # align vertical text
-        if self.text.text_dominant_baseline == "hanging":
+        if self.text.text_dominant_baseline == TextDominantBaseline.HANGING:
+            # hanging (top)
             text_y = self.y1 + self.padding.top
 
-        elif self.text.text_dominant_baseline == "auto":
+        elif self.text.text_dominant_baseline == TextDominantBaseline.AUTO:
+            # auto (bottom)
             text_y = self.y2 - self.padding.bottom
 
-        elif self.text.text_dominant_baseline == "middle":
-            text_y = self.cy
+        elif self.text.text_dominant_baseline == TextDominantBaseline.CENTRAL:
+            # central (center)
+            text_y = self.cy - self.padding.top - self.padding.bottom
+
+        else:
+            # invalid horizontal value
+            raise ValueError(
+                f"invalid text_dominant_baseline value "
+                f"'{self.text.text_dominant_baseline}'!"
+            )
 
         # set text position
         self.text.set_xy(text_x, text_y)

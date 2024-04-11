@@ -6,7 +6,7 @@ events:
   - name: today
     date: "2023-03-14"
 workpackages:
-  - name: WP1
+  - name: Work Package 1
     responsible: John Doe
     tasks:
       - name: My Task
@@ -20,6 +20,9 @@ workpackages:
         start_date: "2023-03-11"
         duration: 3d
         depends_on: My Task
+  - name: Work Package 2
+    responsible: Wayne Doe
+    tasks:
       - name: My Task3
         start_date: "2023-03-12"
         duration: 1w
