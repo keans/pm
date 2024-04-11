@@ -5,7 +5,7 @@ from .event import Event
 from .project import Project
 from .timetableitem import TimetableItem
 from .timetablelevel import TimetableLevel
-from .schema import pm_schema
+from .schema import proma_schema
 
 
 __all__ = [
@@ -16,5 +16,5 @@ __all__ = [
     "Project",
     "TimetableItem",
     "TimetableLevel",
-    "pm_schema",
+    "proma_schema",
 ]

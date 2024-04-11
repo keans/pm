@@ -1,6 +1,6 @@
-from pm.draw.base.listener import OnChangeDimensionListener
-from pm.draw.base.position import Position
-from pm.draw.base.size import Size
+from proma.draw.base.listener import OnChangeDimensionListener
+from proma.draw.base.position import Position
+from proma.draw.base.size import Size
 
 
 class Dimension(OnChangeDimensionListener):

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pm.draw.base import Margin, Padding
+from proma.draw.base import Margin, Padding
 
 
 # default parameter

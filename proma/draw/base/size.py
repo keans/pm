@@ -1,4 +1,4 @@
-from pm.draw.base.listener import OnChangeSizeListener
+from proma.draw.base.listener import OnChangeSizeListener
 
 
 class Size(OnChangeSizeListener):

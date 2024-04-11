@@ -6,3 +6,4 @@
 *.tmp
 *.yaml
 .vscode/
+dist/

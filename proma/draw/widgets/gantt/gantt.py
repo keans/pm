@@ -1,13 +1,13 @@
-from pm.draw.base import Position, Padding
-from pm.draw.base.consts import (
+from proma.draw.base import Position, Padding
+from proma.draw.base.consts import (
     DEFAULT_CELL_WIDTH,
     TextAnchor,
     TextDominantBaseline,
 )
-from pm.draw.widgets.grid import GridWithBars, GridRow
-from pm.models.project import Project
-from pm.models.types import DateType
-from pm.utils.timetable import Timetable, YEAR_QUARTER_MONTH_WEEK_DAY_FMT
+from proma.draw.widgets.grid import GridWithBars, GridRow
+from proma.models.project import Project
+from proma.models.types import DateType
+from proma.utils.timetable import Timetable, YEAR_QUARTER_MONTH_WEEK_DAY_FMT
 
 
 class Gantt(GridWithBars):

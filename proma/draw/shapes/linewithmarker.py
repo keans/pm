@@ -3,9 +3,9 @@ from typing import Optional
 from svgwrite import Drawing
 from svgwrite.container import Group
 
-from pm.draw.base import Dimension
-from pm.draw.base.consts import TextAnchor, TextDominantBaseline
-from pm.draw.shapes import Line, Label
+from proma.draw.base import Dimension
+from proma.draw.base.consts import TextAnchor, TextDominantBaseline
+from proma.draw.shapes import Line, Label
 
 # NEXT: ADD MARKER TO LINE => BETTER SEPARATE LINE CLASS OR EXTEND LINE?!
 

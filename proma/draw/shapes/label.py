@@ -3,14 +3,14 @@ from typing import Optional
 from svgwrite import Drawing
 from svgwrite.container import Group
 
-from pm.draw.base import Margin, Padding, Dimension
-from pm.draw.base.consts import (
+from proma.draw.base import Margin, Padding, Dimension
+from proma.draw.base.consts import (
     DEFAULT_MARGIN,
     DEFAULT_PADDING,
     TextAnchor,
     TextDominantBaseline,
 )
-from pm.draw.shapes import Text
+from proma.draw.shapes import Text
 
 
 class Label(Dimension):

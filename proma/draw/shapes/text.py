@@ -3,8 +3,8 @@ from typing import Optional
 from svgwrite import Drawing
 from svgwrite.container import Group
 
-from pm.draw.base import Position
-from pm.draw.base.consts import TextAnchor, TextDominantBaseline
+from proma.draw.base import Position
+from proma.draw.base.consts import TextAnchor, TextDominantBaseline
 
 
 class Text(Position):

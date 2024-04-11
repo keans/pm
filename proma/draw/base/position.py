@@ -1,4 +1,4 @@
-from pm.draw.base.listener import OnChangePositionListener
+from proma.draw.base.listener import OnChangePositionListener
 
 
 class Position(OnChangePositionListener):

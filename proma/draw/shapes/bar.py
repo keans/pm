@@ -3,8 +3,8 @@ from typing import Optional
 from svgwrite import Drawing
 from svgwrite.container import Group
 
-from pm.draw.base import Dimension, Margin, Padding
-from pm.draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
+from proma.draw.base import Dimension, Margin, Padding
+from proma.draw.base.consts import DEFAULT_MARGIN, DEFAULT_PADDING
 
 
 class Bar(Dimension):

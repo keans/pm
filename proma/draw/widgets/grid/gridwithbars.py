@@ -3,9 +3,9 @@ from typing import Optional
 from svgwrite import Drawing
 from svgwrite.container import Group
 
-from pm.draw.base import Position, Margin
-from pm.draw.shapes import Bar, PathWithArrow, Marker, LineWithMarker
-from pm.draw.widgets.grid import Grid
+from proma.draw.base import Position, Margin
+from proma.draw.shapes import Bar, PathWithArrow, Marker, LineWithMarker
+from proma.draw.widgets.grid import Grid
 
 
 class GridWithBars(Grid):

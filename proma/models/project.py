@@ -6,7 +6,7 @@ import cerberus
 from dateutil.parser import parse as dateutil_parse
 from pytimeparse import parse as pytimeparse_parse
 
-from .schema import pm_schema
+from .schema import proma_schema
 from . import Workpackage, Task, Milestone, Event
 
 
@@ -59,7 +59,7 @@ class Project:
         with open(filename, "r") as f:
             project = yaml.safe_load(f)
 
-            v = cerberus.Validator(pm_schema)
+            v = cerberus.Validator(proma_schema)
             if v.validate(project) is False:
                 raise Exception(v.errors)
 

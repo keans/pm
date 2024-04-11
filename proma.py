@@ -7,13 +7,13 @@ from pathlib import Path
 import svgwrite
 import click
 
-from pm.utils.timetable import (
+from proma.utils.timetable import (
     YEAR_MONTH_WEEK_FMT,
     YEAR_QUARTER_MONTH_WEEK_DAY_FMT,
 )
-from pm.draw.widgets.gantt.gantt import Gantt
+from proma.draw.widgets.gantt.gantt import Gantt
 
-from pm.models import Project
+from proma.models import Project
 
 
 # prepare logger

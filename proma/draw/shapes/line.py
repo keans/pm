@@ -3,7 +3,7 @@ from typing import Optional
 from svgwrite import Drawing
 from svgwrite.container import Group
 
-from pm.draw.base.dimension import Dimension
+from proma.draw.base.dimension import Dimension
 
 
 class Line(Dimension):

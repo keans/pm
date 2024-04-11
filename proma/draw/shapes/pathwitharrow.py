@@ -4,7 +4,7 @@ from svgwrite import Drawing
 from svgwrite.container import Group
 from svgwrite.path import Path
 
-from pm.draw.base import Dimension
+from proma.draw.base import Dimension
 
 
 class PathWithArrow(Dimension):

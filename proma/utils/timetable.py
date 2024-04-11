@@ -3,9 +3,9 @@ from typing import Tuple
 
 from dateutil.rrule import rrule, DAILY, WEEKLY, MONTHLY, YEARLY
 
-from pm.models.timetableitem import TimetableItem
-from pm.models.timetablelevel import TimetableLevel
-from pm.models.types import DateType
+from proma.models.timetableitem import TimetableItem
+from proma.models.timetablelevel import TimetableLevel
+from proma.models.types import DateType
 
 
 # default formats per hierachy

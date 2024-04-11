@@ -3,8 +3,8 @@ from typing import Optional, Iterator
 from svgwrite import Drawing
 from svgwrite.container import Group
 
-from pm.draw.base import Position, Margin, Padding
-from pm.draw.base.consts import (
+from proma.draw.base import Position, Margin, Padding
+from proma.draw.base.consts import (
     DEFAULT_MARGIN,
     DEFAULT_PADDING,
     DEFAULT_CELL_HEIGHT,
@@ -12,7 +12,7 @@ from pm.draw.base.consts import (
     TextAnchor,
     TextDominantBaseline,
 )
-from pm.draw.shapes import Cell
+from proma.draw.shapes import Cell
 
 
 class GridRow(Position):

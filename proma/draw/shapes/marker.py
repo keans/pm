@@ -5,9 +5,9 @@ from svgwrite.container import Group
 from svgwrite.shapes import Polygon, Circle, Rect
 from svgwrite.path import Path
 
-from pm.draw.base import Dimension
-from pm.draw.shapes import Label
-from pm.draw.base.consts import TextAnchor, TextDominantBaseline
+from proma.draw.base import Dimension
+from proma.draw.shapes import Label
+from proma.draw.base.consts import TextAnchor, TextDominantBaseline
 
 
 class Marker(Dimension):

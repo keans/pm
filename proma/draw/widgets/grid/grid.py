@@ -3,9 +3,9 @@ from typing import Optional
 from svgwrite import Drawing
 from svgwrite.container import Group
 
-from pm.draw.base import Position
-from pm.draw.shapes import Cell
-from pm.draw.widgets.grid.gridrow import GridRow
+from proma.draw.base import Position
+from proma.draw.shapes import Cell
+from proma.draw.widgets.grid.gridrow import GridRow
 
 
 class Grid(Position):

@@ -34,7 +34,7 @@ def is_date(
 
 
 # cerberus schema to validate project yaml file
-pm_schema = {
+proma_schema = {
     "name": {"type": "string", "required": True},
     "responsible": {"type": "string", "required": True},
     "start_date": {"type": "string", "required": True, "check_with": is_date},
