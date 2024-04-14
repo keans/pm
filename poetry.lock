@@ -342,7 +342,21 @@ files = [
     {file = "typing_extensions-4.10.0.tar.gz", hash = "sha256:b0abd7c89e8fb96f98db18d86106ff1d90ab692004eb746cf6eda2682f91b3cb"},
 ]
 
+[[package]]
+name = "wheel"
+version = "0.43.0"
+description = "A built-package format for Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "wheel-0.43.0-py3-none-any.whl", hash = "sha256:55c570405f142630c6b9f72fe09d9b67cf1477fcf543ae5b8dcb1f5b7377da81"},
+    {file = "wheel-0.43.0.tar.gz", hash = "sha256:465ef92c69fa5c5da2d1cf8ac40559a8c940886afcef87dcf14b9470862f1d85"},
+]
+
+[package.extras]
+test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "1b2cf478b5506ca8d4fbcc3fca62f34d47f47ad2f9db345d7b48b293c444af4d"
+content-hash = "5d504ac4576636b050fa0197cf26dd9f2f544d9dbd22aafa91ebb2516afe3707"

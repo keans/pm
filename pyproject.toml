@@ -1,10 +1,13 @@
 [tool.poetry]
 name = "proma"
-version = "0.0.1"
+version = "0.0.3"
 description = "Project manager that can create Gantt diagrams as SVGs."
 authors = ["Ansgar Kellner <keans@gmx.de>"]
 license = "MIT"
 readme = "README.rst"
+
+[tool.poetry.scripts]
+proma = "proma.cmd:cli"
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -20,6 +23,7 @@ click = "^8.1.7"
 black = "^24.3.0"
 flake8 = "^7.0.0"
 jedi = "^0.19.1"
+wheel = "^0.43.0"
 
 [build-system]
 requires = ["poetry-core"]
